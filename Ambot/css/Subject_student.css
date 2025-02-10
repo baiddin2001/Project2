@@ -1,0 +1,111 @@
+/* General styling for the courses section */
+.courses1 {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: #f4f4f4;
+ }
+ 
+ .courses1 .heading1 {
+    font-size: 2.5rem;
+    color: #4CAF50;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+ }
+ 
+ /* Container for all the course boxes */
+ .box-container1 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+ }
+ 
+ /* Styling each course box */
+ .box1 {
+    background: linear-gradient(to right, rgba(190, 240, 190, 0.8), rgba(196, 248, 220, 0.8));
+    border-radius: 15px;
+    overflow: hidden;
+    width: 300px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+ }
+ 
+ .box1:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.2);
+ }
+ 
+ /* Tutor information section */
+ .tutor1 {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-bottom: 1px solid #ddd;
+ }
+ 
+ .tutor1 img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+ }
+ 
+ .tutor1 div {
+    text-align: left;
+ }
+ 
+ .tutor1 h3 {
+    font-size: 1.2rem;
+    margin: 0;
+    color: #333;
+ }
+ 
+ .tutor1 span {
+    font-size: 0.9rem;
+    color: #777;
+ }
+ 
+ /* Course image styling */
+ .thumb1 {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+ }
+ 
+ /* Course title styling */
+ .title1 {
+    font-size: 1.4rem;
+    color: #fff;
+    margin: 15px 0;
+    text-transform: uppercase;
+    font-weight: bold;
+ }
+ 
+ /* View Resources button */
+ .inline-btn1 {
+    display: inline-block;
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+ }
+ 
+ .inline-btn1:hover {
+    background-color: #45a049;
+ }
+ 
+ /* Empty message styling */
+ .empty1 {
+    font-size: 1.2rem;
+    color: #888;
+    margin-top: 20px;
+    text-align: center;
+ }
+ 
+ 

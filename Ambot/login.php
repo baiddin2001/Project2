@@ -51,7 +51,8 @@ if (isset($_POST['submit_signup'])) {
 
    $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
    $select_user->execute([$email]);
-   
+
+
    if($select_user->rowCount() > 0){
       $message[] = 'Email already taken!';
    } else {

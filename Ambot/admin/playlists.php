@@ -16,6 +16,45 @@ if(isset($_GET['strand'])){
    header('location:strand-selection.php'); // Redirect if no strand is selected
 }
 
+if (isset($_POST['delete'])) {
+   $playlist_id = $_POST['playlist_id'];
+
+   // Delete associated videos first
+   $delete_videos = $conn->prepare("DELETE FROM `content` WHERE playlist_id = ?");
+   $delete_videos->execute([$playlist_id]);
+
+   // Delete the playlist
+   $delete_playlist = $conn->prepare("DELETE FROM `playlist` WHERE id = ? AND tutor_id = ?");
+   $delete_playlist->execute([$playlist_id, $tutor_id]);
+
+   if ($delete_playlist->rowCount() > 0) {
+       echo "<script>
+           document.addEventListener('DOMContentLoaded', function() {
+               Swal.fire({
+                   title: 'Deleted!',
+                   text: 'Playlist deleted successfully!',
+                   icon: 'success',
+                   confirmButtonText: 'OK'
+               }).then(() => {
+                   window.location.href = 'playlists.php?strand=$strand';
+               });
+           });
+       </script>";
+   } else {
+       echo "<script>
+           document.addEventListener('DOMContentLoaded', function() {
+               Swal.fire({
+                   title: 'Error!',
+                   text: 'Failed to delete playlist!',
+                   icon: 'error',
+                   confirmButtonText: 'OK'
+               });
+           });
+       </script>";
+   }
+}
+
+
 ?>
 
 <!DOCTYPE html>

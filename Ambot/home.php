@@ -4,10 +4,20 @@ include 'components/connect.php';
 
 if(isset($_COOKIE['user_id'])){
    $user_id = $_COOKIE['user_id'];
-}else{
+
+   // Fetch the user's strand from the database
+   $select_user = $conn->prepare("SELECT strand FROM users WHERE id = ?");
+   $select_user->execute([$user_id]);
+   $fetch_user = $select_user->fetch(PDO::FETCH_ASSOC);
+
+   // If user exists, get their strand
+   $user_strand = $fetch_user ? $fetch_user['strand'] : '';
+} else {
    $user_id = '';
+   $user_strand = '';
 }
 
+// Fetch user stats
 $select_likes = $conn->prepare("SELECT * FROM `likes` WHERE user_id = ?");
 $select_likes->execute([$user_id]);
 $total_likes = $select_likes->rowCount();
@@ -20,7 +30,37 @@ $select_bookmark = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ?");
 $select_bookmark->execute([$user_id]);
 $total_bookmarked = $select_bookmark->rowCount();
 
+// Handle playlist bookmark saving
+if(isset($_POST['save_list'])){
+   if($user_id != ''){
+      $list_id = filter_var($_POST['list_id'], FILTER_SANITIZE_STRING);
+      $select_list = $conn->prepare("SELECT * FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
+      $select_list->execute([$user_id, $list_id]);
+
+      if($select_list->rowCount() > 0){
+         $remove_bookmark = $conn->prepare("DELETE FROM `bookmark` WHERE user_id = ? AND playlist_id = ?");
+         $remove_bookmark->execute([$user_id, $list_id]);
+         $message[] = 'Playlist removed!';
+      } else {
+         $insert_bookmark = $conn->prepare("INSERT INTO `bookmark`(user_id, playlist_id) VALUES(?,?)");
+         $insert_bookmark->execute([$user_id, $list_id]);
+         $message[] = 'Playlist saved!';
+      }
+   } else {
+      $message[] = 'Please login first!';
+   }
+}
+
+// Get playlist ID from URL if available
+$get_id = isset($_GET['get_id']) ? filter_var($_GET['get_id'], FILTER_SANITIZE_STRING) : null;
+
+// Redirect to login page if the user is not logged in
+if($user_id == ''){
+    header("Location: login.php");
+    exit();
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -61,15 +101,17 @@ $total_bookmarked = $select_bookmark->rowCount();
                <p>Saved Playlist: <span><?= $total_bookmarked; ?></span></p>
                <a href="bookmark.php" class="inline-btn">View Bookmark</a>
             </div>
-            <section class="courses">
+
+
+   <section class="courses">
 
          <!-- <h1 class="heading">latest courses</h1> -->
 
    <div class="notification-container">
-         <h3 class="title1">Announcement</h3>
+         <h3 class="title1">Subject</h3>
          <?php
-         $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? ORDER BY date DESC LIMIT 3");
-         $select_courses->execute(['active']);
+         $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? AND strand = ? ORDER BY date DESC LIMIT 3");
+         $select_courses->execute(['active', $user_strand]);
          if($select_courses->rowCount() > 0){
             while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
                $course_id = $fetch_course['id'];
@@ -92,8 +134,6 @@ $total_bookmarked = $select_bookmark->rowCount();
             echo '<p class="empty">No courses added yet!</p>';
          }
          ?>
-</div>
-
 <div class="more-btn">
    <a href="courses.php" class="inline-option-btn">View More</a>
 </div>

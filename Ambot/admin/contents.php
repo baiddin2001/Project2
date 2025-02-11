@@ -9,31 +9,42 @@ if(isset($_COOKIE['tutor_id'])){
    header('location:login.php');
 }
 
-if(isset($_POST['delete_video'])){
+if (isset($_POST['delete_video'])) {
    $delete_id = $_POST['video_id'];
    $delete_id = filter_var($delete_id, FILTER_SANITIZE_STRING);
-   $verify_video = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
-   $verify_video->execute([$delete_id]);
-   if($verify_video->rowCount() > 0){
-      $delete_video_thumb = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
-      $delete_video_thumb->execute([$delete_id]);
-      $fetch_thumb = $delete_video_thumb->fetch(PDO::FETCH_ASSOC);
-      unlink('../uploaded_files/'.$fetch_thumb['thumb']);
-      $delete_video = $conn->prepare("SELECT * FROM `content` WHERE id = ? LIMIT 1");
-      $delete_video->execute([$delete_id]);
-      $fetch_video = $delete_video->fetch(PDO::FETCH_ASSOC);
-      unlink('../uploaded_files/'.$fetch_video['video']);
-      $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE content_id = ?");
-      $delete_likes->execute([$delete_id]);
-      $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE content_id = ?");
-      $delete_comments->execute([$delete_id]);
-      $delete_content = $conn->prepare("DELETE FROM `content` WHERE id = ?");
-      $delete_content->execute([$delete_id]);
-      $message[] = 'video deleted!';
-   }else{
-      $message[] = 'video already deleted!';
-   }
 
+   // Fetch all details in one query
+   $verify_video = $conn->prepare("SELECT thumb, video FROM `content` WHERE id = ? LIMIT 1");
+   $verify_video->execute([$delete_id]);
+
+   if ($verify_video->rowCount() > 0) {
+       $fetch_video = $verify_video->fetch(PDO::FETCH_ASSOC);
+
+       // Delete thumbnail if exists
+       if (!empty($fetch_video['thumb']) && file_exists('../uploaded_files/' . $fetch_video['thumb'])) {
+           unlink('../uploaded_files/' . $fetch_video['thumb']);
+       }
+
+       // Delete video if exists
+       if (!empty($fetch_video['video']) && file_exists('../uploaded_files/' . $fetch_video['video'])) {
+           unlink('../uploaded_files/' . $fetch_video['video']);
+       }
+
+       // Delete associated data
+       $delete_likes = $conn->prepare("DELETE FROM `likes` WHERE content_id = ?");
+       $delete_likes->execute([$delete_id]);
+
+       $delete_comments = $conn->prepare("DELETE FROM `comments` WHERE content_id = ?");
+       $delete_comments->execute([$delete_id]);
+
+       // Delete video record
+       $delete_content = $conn->prepare("DELETE FROM `content` WHERE id = ?");
+       $delete_content->execute([$delete_id]);
+
+       $message[] = 'Video deleted!';
+   } else {
+       $message[] = 'Video already deleted!';
+   }
 }
 
 ?>

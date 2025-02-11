@@ -35,6 +35,31 @@ if(isset($_POST['delete_video'])){
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Dashboard</title>
    <link rel="stylesheet" href="../css/admin_style.css">
+   <style>
+      .strand-humms {
+    background: #e0f7fa; 
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid #0288d1;
+}
+
+.strand-ict {
+    background:rgb(207, 240, 209); 
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid #388e3c;
+}
+
+.strand-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+   </style>
 </head>
 <body>
 <?php include '../components/admin_header.php'; ?>
@@ -48,22 +73,27 @@ if(isset($_POST['delete_video'])){
       </div>
       
       <?php
-      $select_videos = $conn->prepare("SELECT c.*, p.title AS subject, p.strand FROM `content` c INNER JOIN `playlist` p ON c.playlist_id = p.id WHERE c.tutor_id = ? ORDER BY p.strand, p.title, c.date DESC");
+      $select_videos = $conn->prepare("SELECT c.*, p.title AS subject, p.strand 
+                                       FROM `content` c 
+                                       INNER JOIN `playlist` p ON c.playlist_id = p.id 
+                                       WHERE c.tutor_id = ? 
+                                       ORDER BY p.strand, p.title, c.date DESC");
       $select_videos->execute([$tutor_id]);
       $resources = $select_videos->fetchAll(PDO::FETCH_ASSOC);
       
       $current_strand = '';
-      $class_count = 1;
-      
+
       foreach ($resources as $video) {
          if ($current_strand != $video['strand']) {
             if ($current_strand != '') {
-               echo '</div>'; // Close previous strand div
+               echo '</div>'; 
             }
             $current_strand = $video['strand'];
-            echo "<div class='strand-group class$class_count' style='background: #f0f0f0; padding: 10px; border-radius: 8px; margin-bottom: 20px;'>";
-            echo "<h2 style='text-align: center;'>$current_strand</h2>";
-            $class_count++;
+
+            $strand_class = ($current_strand == 'HUMMS') ? 'strand-humms' : 'strand-ict';
+
+            echo "<div class='strand-group $strand_class'>";
+            echo "<h2 class='strand-title'>$current_strand Resources</h2>";
          }
          ?>
          <div class="box">
@@ -82,7 +112,7 @@ if(isset($_POST['delete_video'])){
          <?php
       }
       if ($current_strand != '') {
-         echo '</div>'; // Close last strand div
+         echo '</div>'; 
       }
       ?>
    </div>

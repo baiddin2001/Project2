@@ -50,15 +50,34 @@ if(isset($_POST['save_list'])){
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
    <link rel="stylesheet" href="css/Subject_student.css">
    <link rel="stylesheet" href="css/style.css">
+   <style>
+      .back-button {
+         position: absolute;
+         top: 20px;
+         right: 20px;
+         background-color: #f3f3f3;
+         color: #333;
+         padding: 8px 16px;
+         border: 1px solid #ddd;
+         border-radius: 5px;
+         text-decoration: none;
+         font-size: 14px;
+         transition: background-color 0.3s ease;
+      }
+      .back-button:hover {
+         background-color: #e0e0e0;
+      }
+   </style>
 </head>
 <body>
 
 <?php include 'components/user_header.php'; ?>
 
+<a href="javascript:history.back()" class="back-button">Back</a>
+
 <!-- this is for the video area -->
 <section class="courses1">
    <h1 class="heading1" style="color: black;">Playlist Videos</h1>
-   
    <div class="box-container1">
          <?php
          $select_content = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ? AND status = ? AND video IS NOT NULL AND video != '' AND video != 'none' ORDER BY date DESC");
@@ -66,7 +85,6 @@ if(isset($_POST['save_list'])){
 
          if($select_content->rowCount() > 0){
             while($fetch_content = $select_content->fetch(PDO::FETCH_ASSOC)){  
-               
                $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
                $select_tutor->execute([$fetch_content['tutor_id']]);
                $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
@@ -95,8 +113,6 @@ if(isset($_POST['save_list'])){
    </div>
 </section>
 
-
-<!-- Downloadable Files Section -->
 <section class="courses1">
    <h1 class="heading1" style="color: black;">Downloadable Files</h1>
    <div class="box-container1">
@@ -120,7 +136,6 @@ if(isset($_POST['save_list'])){
       ?>
    </div>
 </section>
-
 
 <?php include 'components/footer.php'; ?>
 <script src="js/script.js"></script>

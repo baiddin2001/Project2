@@ -1,3 +1,5 @@
+<!-- select_strand.php -->
+
 <?php
 
 include '../components/connect.php';
@@ -34,14 +36,12 @@ if(isset($_COOKIE['tutor_id'])){
    <h1 class="heading">Select Strand</h1>
 
    <div class="box-container">
-   <a href="playlists.php?strand=HUMMS" class="box">
+   <a href="classes.php?strand=HUMMS" class="box">
    <h3>HUMMS</h3>
    </a>
-   <a href="playlists.php?strand=ICT" class="box">
+   <a href="classes.php?strand=ICT" class="box">
    <h3>ICT</h3>
    </a>
-
-
    </div>
 </section>
 
@@ -53,6 +53,4 @@ if(isset($_COOKIE['tutor_id'])){
 </html>
 
 <?php
-
 ?>
-

@@ -81,15 +81,15 @@ if(isset($_COOKIE['user_id'])){
       </div>
    </div>
    <div style="margin-top: 15px; color: #555;">
-      <p style="font-size: 14px; color: #2d2d2d;">Playlists: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_playlists; ?></span></p>
-      <p style="font-size: 14px; color: #2d2d2d;">Total Videos: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_contents ?></span></p>
+      <p style="font-size: 14px; color: #2d2d2d;">Total Learning Materials: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_playlists; ?></span></p>
+      <p style="font-size: 14px; color: #2d2d2d;">Total Uploaded Videos: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_contents ?></span></p>
       <p style="font-size: 14px; color: #2d2d2d;">Total Likes: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_likes ?></span></p>
       <p style="font-size: 14px; color: #2d2d2d;">Total Comments: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_comments ?></span></p>
    </div>
-   <form action="tutor_profile.php" method="post" style="margin-top: 15px;">
+   <!-- <form action="tutor_profile.php" method="post" style="margin-top: 15px;">
       <input type="hidden" name="tutor_email" value="<?= $fetch_tutor['email']; ?>">
       <input type="submit" value="View Profile" name="tutor_fetch" class="inline-btn" style="background-color: #007bff; color: #fff; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; font-size: 14px; transition: background-color 0.3s;">
-   </form>
+   </form> -->
 </div>
 
       <?php

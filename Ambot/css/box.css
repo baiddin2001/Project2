@@ -136,52 +136,9 @@
     padding: 15px 20px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
     display: flex;
-    align-items: left;
+    align-items: center;
     gap: 15px;
 }
-
-/* Default Notification Box (Position: Relative) */
-.notification-box {
-   position: relative; /* Default positioning */
-   left: 0;
-   right: 0;
-   margin: 0; /* Keeps it in the default flow */
-}
-
-/* Centered Notification Box (Position: Absolute / Fixed) */
-.notification-box2 {
-   position: absolute; /* Makes it independent of other content */
-   left: 50%;
-   transform: translateX(-50%); /* Centers it horizontally */
-   margin: 10px 0;
-}
-
-/* Sticky Notification Box (Always visible on top) */
-.notification-box2.sticky {
-   position: fixed; /* Sticks to the viewport */
-   top: 20px;
-   left: 50%;
-   transform: translateX(-50%);
-   z-index: 1000; /* Ensures it's above other content */
-}
-
-/* Right-aligned Notification Box */
-.notification-box2.right {
-   position: absolute;
-   right: 0;
-   left: auto;
-   margin-right: 10px;
-}
-
-/* Bottom-Aligned Notification Box */
-.notification-box2.bottom {
-   position: fixed;
-   bottom: 20px;
-   left: 50%;
-   transform: translateX(-50%);
-   z-index: 1000;
-}
-
 
 /* Notification Icon */
 .notification-box .icon {
@@ -233,21 +190,6 @@
     flex-direction: column;
     gap: 1rem;
     margin: -5px 0;
-    position: absolute; /* Makes it independent of other content */
-    left: 50%;
-    transform: translateX(-20%); /* Centers it horizontally */
-    margin: 10px 0;
-} 
-
-.notification-container2 {
-   display: flex;
-   flex-direction: column;
-   gap: 1rem;
-   margin: -5px 0;
-   position: absolute; /* Makes it independent of other content */
-   left: 50%;
-   transform: translateX(150%); /* Centers it horizontally */
-   margin: 10px 0;
 } 
 
 /* For responsiveness */

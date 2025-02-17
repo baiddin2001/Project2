@@ -1,5 +1,3 @@
-<!-- classes.php -->
-
 <?php
 
 include '../components/connect.php';
@@ -61,6 +59,88 @@ if(isset($_POST['create_class'])){
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Manage Classes - <?= $strand; ?> </title>
    <link rel="stylesheet" href="../css/admin_style.css">
+   <style>
+      .class-management .box-container {
+         display: grid;
+         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+         gap: 20px;
+         margin-top: 20px;
+      }
+
+      .class-management .box {
+         background: #fff;
+         padding: 20px;
+         text-align: center;
+         border-radius: 8px;
+         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+         transition: all 0.3s ease;
+         font-size: 16px; /* Ensures readability */
+         line-height: 1.5; /* Line spacing for better readability */
+      }
+
+      .class-management .box:hover {
+         transform: translateY(-5px);
+         box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .class-management .box .title {
+         font-size: 20px; /* Larger font size for titles */
+         font-weight: bold;
+         margin-bottom: 15px;
+         color: #333;
+      }
+
+      .class-management .box .btn {
+         background-color: #4CAF50;
+         color: white;
+         padding: 12px 25px;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+         text-decoration: none;
+         font-size: 16px; /* Larger text for the button */
+      }
+
+      .class-management .box .btn:hover {
+         background-color: #45a049;
+      }
+
+      .class-management .box form {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+      }
+
+      .class-management .box input[type="text"] {
+         padding: 12px;
+         font-size: 16px;
+         margin-right: 10px;
+         border: 1px solid #ddd;
+         border-radius: 4px;
+         width: 60%; /* Ensures input takes up a reasonable width */
+      }
+
+      .class-management .box input[type="submit"] {
+         padding: 12px 25px;
+         font-size: 16px;
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+      }
+
+      .class-management .box input[type="submit"]:hover {
+         background-color: #45a049;
+      }
+
+      .empty {
+         text-align: center;
+         color: #888;
+         font-size: 18px;
+         margin-top: 20px;
+      }
+   </style>
 </head>
 <body>
 
@@ -74,7 +154,7 @@ if(isset($_POST['create_class'])){
       <div class="box" style="text-align: center;">
          <h3 class="title">Create New Class</h3>
          <form action="" method="post">
-            <input type="text" name="class_name" placeholder="Enter class name..." required maxlength="50">
+            <input type="text" name="class_name" placeholder="Enter class" required maxlength="50">
             <input type="submit" name="create_class" value="Create Class" class="btn">
          </form>
       </div>

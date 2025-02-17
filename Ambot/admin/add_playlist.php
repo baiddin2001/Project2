@@ -10,12 +10,12 @@ if (isset($_COOKIE['tutor_id'])) {
     exit();
 }
 
-// Get strand from URL or redirect
-if (isset($_GET['strand'])) {
+// Get strand and class from URL
+if (isset($_GET['strand']) && isset($_GET['class_id'])) {
     $strand = $_GET['strand'];
+    $class_id = $_GET['class_id']; // Get class_id from URL
 } else {
-    $strand = '';
-    header('location:select_strand.php'); // Redirect if no strand is selected
+    header('location:classes.php?strand=' . $strand); // Redirect if no strand or class is selected
     exit();
 }
 
@@ -28,9 +28,7 @@ if (isset($_POST['submit'])) {
     $description = filter_var($description, FILTER_SANITIZE_STRING);
     $status = $_POST['status'];
     $status = filter_var($status, FILTER_SANITIZE_STRING);
-    $class = $_POST['class'];
-    $class = filter_var($class, FILTER_SANITIZE_STRING);
-
+    
     // Image upload
     $image = $_FILES['image']['name'];
     $image = filter_var($image, FILTER_SANITIZE_STRING);
@@ -39,14 +37,15 @@ if (isset($_POST['submit'])) {
     $image_tmp_name = $_FILES['image']['tmp_name'];
     $image_folder = '../uploaded_files/' . $rename;
 
-    // Insert into database with strand
-    $add_playlist = $conn->prepare("INSERT INTO `playlist` (id, tutor_id, title, description, thumb, status, strand, class) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $add_playlist->execute([$id, $tutor_id, $title, $description, $rename, $status, $strand, $class]);
+    // Insert into the database, making sure to include class_id
+    $add_playlist = $conn->prepare("INSERT INTO `playlist` (id, tutor_id, title, description, thumb, status, strand, class_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    $add_playlist->execute([$id, $tutor_id, $title, $description, $rename, $status, $strand, $class_id]);
 
     move_uploaded_file($image_tmp_name, $image_folder);
 
-    $message[] = 'New subject added for ' . htmlspecialchars($strand) . '!';
+    $message[] = 'New subject added for ' . htmlspecialchars($strand) . ' in class ' . htmlspecialchars($class_id) . '!';
 }
+
 ?>
 
 <!DOCTYPE html>
@@ -70,7 +69,7 @@ if (isset($_POST['submit'])) {
 <section class="playlist-form">
    <h1 class="heading">Create Subject for <?= htmlspecialchars($strand); ?></h1>
 
-   <form action="add_playlist.php?strand=<?= urlencode($strand); ?>" method="post" enctype="multipart/form-data">
+   <form action="add_playlist.php?strand=<?= urlencode($strand); ?>&class_id=<?= urlencode($class_id); ?>" method="post" enctype="multipart/form-data">
       <p>Subject Status <span>*</span></p>
       <select name="status" class="box" required>
          <option value="" selected disabled>-- Select Status --</option>

@@ -9,51 +9,13 @@ if(isset($_COOKIE['tutor_id'])){
    header('location:login.php');
 }
 
-// Get the strand from the URL
-if(isset($_GET['strand'])){
+// Get the strand and class from the URL
+if(isset($_GET['strand']) && isset($_GET['class_id'])){
    $strand = $_GET['strand'];
+   $class_id = $_GET['class_id'];
 } else {
-   header('location:strand-selection.php'); // Redirect if no strand is selected
+   header('location:classes.php?strand=' . $strand); // Redirect if no strand or class is selected
 }
-
-if (isset($_POST['delete'])) {
-   $playlist_id = $_POST['playlist_id'];
-
-   // Delete associated videos first
-   $delete_videos = $conn->prepare("DELETE FROM `content` WHERE playlist_id = ?");
-   $delete_videos->execute([$playlist_id]);
-
-   // Delete the playlist
-   $delete_playlist = $conn->prepare("DELETE FROM `playlist` WHERE id = ? AND tutor_id = ?");
-   $delete_playlist->execute([$playlist_id, $tutor_id]);
-
-   if ($delete_playlist->rowCount() > 0) {
-       echo "<script>
-           document.addEventListener('DOMContentLoaded', function() {
-               Swal.fire({
-                   title: 'Deleted!',
-                   text: 'Playlist deleted successfully!',
-                   icon: 'success',
-                   confirmButtonText: 'OK'
-               }).then(() => {
-                   window.location.href = 'playlists.php?strand=$strand';
-               });
-           });
-       </script>";
-   } else {
-       echo "<script>
-           document.addEventListener('DOMContentLoaded', function() {
-               Swal.fire({
-                   title: 'Error!',
-                   text: 'Failed to delete playlist!',
-                   icon: 'error',
-                   confirmButtonText: 'OK'
-               });
-           });
-       </script>";
-   }
-}
-
 
 ?>
 
@@ -62,7 +24,7 @@ if (isset($_POST['delete'])) {
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title><?= $strand; ?> Subjects</title>
+   <title><?= $strand; ?> Subjects for Class <?= $class_id; ?></title>
    <link rel="stylesheet" href="../css/admin_style.css">
 </head>
 <body>
@@ -70,17 +32,18 @@ if (isset($_POST['delete'])) {
 <?php include '../components/admin_header.php'; ?>
 
 <section class="playlists">
-   <h1 class="heading"><?= $strand; ?> Subjects</h1>
+   <h1 class="heading"><?= $strand; ?> Subjects for Class <?= $class_id; ?></h1>
 
    <div class="box-container">
       <div class="box" style="text-align: center;">
          <h3 class="title">Create New Subject</h3>
-         <a href="add_playlist.php?strand=<?= $strand; ?>" class="btn">Add Subject</a>
+         <a href="add_playlist.php?strand=<?= $strand; ?>&class_id=<?= $class_id; ?>" class="btn">Add Subject</a>
       </div>
 
       <?php
-         $select_playlist = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ? AND strand = ? ORDER BY date DESC");
-         $select_playlist->execute([$tutor_id, $strand]);
+         // Fetch playlists that are linked to the specific class and strand
+         $select_playlist = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ? AND strand = ? AND class_id = ? ORDER BY date DESC");
+         $select_playlist->execute([$tutor_id, $strand, $class_id]);
 
          if($select_playlist->rowCount() > 0){
             while($fetch_playlist = $select_playlist->fetch(PDO::FETCH_ASSOC)){
@@ -90,28 +53,17 @@ if (isset($_POST['delete'])) {
                $total_videos = $count_videos->rowCount();
       ?>
       <div class="box">
-         <div class="flex">
-            <div>
-               <i class="fas fa-circle-dot" style="<?= $fetch_playlist['status'] == 'active' ? 'color:limegreen' : 'color:red'; ?>"></i>
-               <span><?= $fetch_playlist['status']; ?></span>
-            </div>
-            <div><i class="fas fa-calendar"></i><span><?= $fetch_playlist['date']; ?></span></div>
-         </div>
-         <div class="thumb">
-            <span><?= $total_videos; ?></span>
-            <img src="../uploaded_files/<?= $fetch_playlist['thumb']; ?>" alt="">
-         </div>
          <h3 class="title"><?= $fetch_playlist['title']; ?></h3>
          <p class="description"><?= $fetch_playlist['description']; ?></p>
+         <a href="view_playlist.php?get_id=<?= $playlist_id; ?>" class="btn">View Lessons</a>
          <form action="" method="post" class="flex-btn">
             <input type="hidden" name="playlist_id" value="<?= $playlist_id; ?>">
             <a href="update_playlist.php?get_id=<?= $playlist_id; ?>" class="option-btn">Update</a>
             <input type="submit" value="Delete" class="delete-btn" onclick="return confirm('Delete this playlist?');" name="delete">
          </form>
-         <a href="view_playlist.php?get_id=<?= $playlist_id; ?>" class="btn">View Lessons</a>
       </div>
       <?php
-            } 
+            }
          } else {
             echo '<p class="empty">No subjects added yet!</p>';
          }

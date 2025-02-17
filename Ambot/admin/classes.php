@@ -67,7 +67,7 @@ if(isset($_POST['create_class'])){
 <?php include '../components/admin_header.php'; ?>
 
 <section class="class-management">
-   <h1 class="heading">Manage Classes for <?= $strand; ?> Strand</h1>
+   <h1 class="heading">Classes for <?= $strand; ?> Strand</h1>
 
    <div class="box-container">
       <!-- Form to create new class -->

@@ -36,6 +36,7 @@ if(isset($_POST['delete_video'])){
    <title>Dashboard</title>
    <link rel="stylesheet" href="../css/admin_style.css">
    <style>
+<<<<<<< HEAD
    .strand-humms, .strand-ict {
       padding: 10px;
       border-radius: 8px;
@@ -92,6 +93,32 @@ if(isset($_POST['delete_video'])){
       padding: 4px 8px;
    }
 </style>
+=======
+      .strand-humms {
+    background: #e0f7fa; 
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid #0288d1;
+}
+
+.strand-ict {
+    background:rgb(207, 240, 209); 
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    border-left: 5px solid #388e3c;
+}
+
+.strand-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+   </style>
+>>>>>>> eb751e84ac7cf09cb5bcc511d9a3a0d490b0c73e
 </head>
 <body>
 <?php include '../components/admin_header.php'; ?>

@@ -38,6 +38,7 @@ if (isset($_POST['submit_signup'])) {
    $strand = filter_var($_POST['strand'], FILTER_SANITIZE_STRING);
    $pass = sha1($_POST['pass']);
    $pass = filter_var($pass, FILTER_SANITIZE_STRING);
+   $class = filter_var($_POST['class'], FILTER_SANITIZE_STRING);
    $cpass = sha1($_POST['cpass']);
    $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
 
@@ -59,8 +60,8 @@ if (isset($_POST['submit_signup'])) {
       if($pass != $cpass){
          $message[] = 'Confirm password does not match!';
       } else {
-         $insert_user = $conn->prepare("INSERT INTO `users`(id, name, email, password, image, strand) VALUES(?,?,?,?,?,?)");
-         $insert_user->execute([$id, $name, $email, $cpass, $rename, $strand]);
+         $insert_user = $conn->prepare("INSERT INTO `users`(id, name, email, password, image, strand, class_id) VALUES(?,?,?,?,?,?,?)");
+         $insert_user->execute([$id, $name, $email, $cpass, $rename, $strand, $class]);         
          move_uploaded_file($image_tmp_name, $image_folder);
 
          // ✅ Redirect to login page instead of auto-login
@@ -88,10 +89,15 @@ if (isset($_POST['submit_signup'])) {
          <span class="span1">Create your account and begin your academic journey today!</span>
          <input type="text" name="name" placeholder="Enter your Name" maxlength="50" required>
          <input type="email" name="email" placeholder="Enter your Email" maxlength="100" required>
-         <select name="strand" required>
+         <select name="strand" id="strand" required>
             <option value="">Select Your Strand</option>
             <option value="ICT">ICT</option>
             <option value="HUMMS">HUMMS</option>
+         </select>
+
+         <!-- Classes Dropdown (Initially empty) -->
+         <select name="class" id="class" required>
+            <option value="">Select Your Class</option>
          </select>
          <input type="password" name="pass" placeholder="Enter your Password" maxlength="20" required>
          <input type="password" name="cpass" placeholder="Confirm your Password" maxlength="20" required>
@@ -147,6 +153,31 @@ if (isset($_POST['submit_signup'])) {
    });
    document.getElementById('signIn').addEventListener('click', () => {
       document.getElementById('container').classList.remove("right-panel-active");
+   });
+
+   // Fetch classes based on strand
+   const strandSelect = document.getElementById('strand');
+   const classSelect = document.getElementById('class');
+
+   strandSelect.addEventListener('change', function() {
+      const selectedStrand = this.value;
+
+      // Clear previous options
+      classSelect.innerHTML = '<option value="">Select Your Class</option>';
+
+      if (selectedStrand) {
+         fetch(`fetch_classes.php?strand=${selectedStrand}`)
+            .then(response => response.json())
+            .then(data => {
+               data.forEach(classItem => {
+                  const option = document.createElement('option');
+                  option.value = classItem.id;
+                  option.textContent = classItem.class_name;
+                  classSelect.appendChild(option);
+               });
+            })
+            .catch(error => console.error('Error fetching classes:', error));
+      }
    });
 </script>
 <footer class="footer1">

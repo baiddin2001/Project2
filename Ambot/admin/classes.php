@@ -50,6 +50,18 @@ if(isset($_POST['create_class'])){
    }
 }
 
+// Handle class deletion
+if(isset($_GET['delete_class'])){
+   $class_id = $_GET['delete_class'];
+
+   // Check if the class exists and delete it
+   $delete_class = $conn->prepare("DELETE FROM `classes` WHERE id = ? AND tutor_id = ?");
+   $delete_class->execute([$class_id, $tutor_id]);
+
+   // Redirect back to the same page to reflect changes
+   header('location:classes.php?strand=' . $strand);
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -60,6 +72,48 @@ if(isset($_POST['create_class'])){
    <title>Manage Classes - <?= $strand; ?> </title>
    <link rel="stylesheet" href="../css/admin_style.css">
    <style>
+      .class-management .header-container {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         margin-bottom: 30px;
+      }
+
+      .class-management .heading {
+         font-size: 28px;
+         font-weight: bold;
+         color: #333;
+      }
+
+      .create-class-form {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+      }
+
+      .create-class-form input[type="text"] {
+         padding: 10px 20px;
+         font-size: 16px;
+         border: 1px solid #ddd;
+         border-radius: 4px;
+         max-width: 200px;
+         width: 100%;
+      }
+
+      .create-class-form input[type="submit"] {
+         padding: 10px 20px;
+         font-size: 16px;
+         background-color: #4CAF50;
+         color: white;
+         border: none;
+         border-radius: 4px;
+         cursor: pointer;
+      }
+
+      .create-class-form input[type="submit"]:hover {
+         background-color: #45a049;
+      }
+
       .class-management .box-container {
          display: grid;
          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
@@ -105,33 +159,20 @@ if(isset($_POST['create_class'])){
          background-color: #45a049;
       }
 
-      .class-management .box form {
-         display: flex;
-         justify-content: center;
-         align-items: center;
-      }
-
-      .class-management .box input[type="text"] {
-         padding: 12px;
-         font-size: 16px;
-         margin-right: 10px;
-         border: 1px solid #ddd;
-         border-radius: 4px;
-         width: 60%; /* Ensures input takes up a reasonable width */
-      }
-
-      .class-management .box input[type="submit"] {
-         padding: 12px 25px;
-         font-size: 16px;
-         background-color: #4CAF50;
+      .delete-btn {
+         background-color: #f44336;
          color: white;
-         border: none;
+         padding: 10px 15px;
          border-radius: 4px;
          cursor: pointer;
+         font-size: 14px;
+         text-decoration: none;
+         display: inline-block;
+         margin-top: 10px;
       }
 
-      .class-management .box input[type="submit"]:hover {
-         background-color: #45a049;
+      .delete-btn:hover {
+         background-color: #e53935;
       }
 
       .empty {
@@ -147,18 +188,16 @@ if(isset($_POST['create_class'])){
 <?php include '../components/admin_header.php'; ?>
 
 <section class="class-management">
-   <h1 class="heading">Classes for <?= $strand; ?> Strand</h1>
+   <div class="header-container">
+      <h1 class="heading">Classes for <?= $strand; ?> Strand</h1>
+      <!-- Create New Class Form (aligned to the right) -->
+      <form class="create-class-form" action="" method="post">
+         <input type="text" name="class_name" placeholder="Enter class" required maxlength="50">
+         <input type="submit" name="create_class" value="Create Class">
+      </form>
+   </div>
 
    <div class="box-container">
-      <!-- Form to create new class -->
-      <div class="box" style="text-align: center;">
-         <h3 class="title">Create New Class</h3>
-         <form action="" method="post">
-            <input type="text" name="class_name" placeholder="Enter class" required maxlength="50">
-            <input type="submit" name="create_class" value="Create Class" class="btn">
-         </form>
-      </div>
-
       <?php
          // Fetch all the classes created by the tutor for the selected strand
          $select_classes = $conn->prepare("SELECT * FROM `classes` WHERE tutor_id = ? AND strand = ? ORDER BY class_name ASC");
@@ -171,6 +210,8 @@ if(isset($_POST['create_class'])){
       <div class="box">
          <h3 class="title"><?= $fetch_class['class_name']; ?></h3>
          <a href="playlists.php?strand=<?= $strand; ?>&class_id=<?= $class_id; ?>" class="btn">View Subjects</a>
+         <!-- Delete Button -->
+         <a href="classes.php?strand=<?= $strand; ?>&delete_class=<?= $class_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this class?')">Delete</a>
       </div>
       <?php
             }

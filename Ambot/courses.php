@@ -6,22 +6,34 @@ include 'components/connect.php';
 if(isset($_COOKIE['user_id'])){
    $user_id = $_COOKIE['user_id'];
 
-   // Fetch the user's strand from the database
-   $select_user = $conn->prepare("SELECT strand FROM users WHERE id = ?");
+   // Fetch the user's strand and class from the database
+   $select_user = $conn->prepare("SELECT strand, class_id FROM users WHERE id = ?");
    $select_user->execute([$user_id]);
    $fetch_user = $select_user->fetch(PDO::FETCH_ASSOC);
 
-   // If user exists, get their strand
    if($fetch_user){
       $user_strand = $fetch_user['strand'];
+      $user_class_id = $fetch_user['class_id'];
    } else {
-      $user_strand = ''; // Default to empty if not found
+      $user_strand = '';
+      $user_class_id = '';
    }
 } else {
    $user_id = '';
    $user_strand = '';
+   $user_class_id = '';
 }
 
+// Fetch the class name based on class_id
+$class_name = 'Unknown Class';
+if (!empty($user_class_id)) {
+   $select_class = $conn->prepare("SELECT class_name FROM classes WHERE id = ?");
+   $select_class->execute([$user_class_id]);
+   $fetch_class = $select_class->fetch(PDO::FETCH_ASSOC);
+   if ($fetch_class) {
+      $class_name = $fetch_class['class_name'];
+   }
+}
 ?>
 
 <!DOCTYPE html>
@@ -48,14 +60,13 @@ if(isset($_COOKIE['user_id'])){
 
 <section class="courses1">
 
-   <h1 class="heading1" style="color: black;">Available Subjects for <?= htmlspecialchars($user_strand); ?></h1>
+   <h1 class="heading1" style="color: black;">Subjects for <?= htmlspecialchars($user_strand); ?> - <?= htmlspecialchars($class_name); ?></h1>
 
    <div class="box-container1">
 
       <?php
-      // Fetch courses that match the student's strand
-      $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? AND strand = ? ORDER BY date DESC");
-      $select_courses->execute(['active', $user_strand]);
+      $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? AND strand = ? AND class_id = ? ORDER BY date DESC");
+      $select_courses->execute(['active', $user_strand, $user_class_id]);
 
       if($select_courses->rowCount() > 0){
          while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
@@ -67,7 +78,7 @@ if(isset($_COOKIE['user_id'])){
       ?>
       <div class="box1">
          <div class="tutor1">
-            <img src="uploaded_files/<?= $fetch_tutor['image']; ?>" alt="">
+            <img src="uploaded_files/<?= htmlspecialchars($fetch_tutor['image']); ?>" alt="">
             <div>
                <h3 style="color: black;"><?= htmlspecialchars($fetch_tutor['name']); ?></h3>
                <span><?= htmlspecialchars($fetch_course['date']); ?></span>
@@ -80,7 +91,7 @@ if(isset($_COOKIE['user_id'])){
       <?php
          }
       } else {
-         echo '<p class="empty1">No courses available for your strand!</p>';
+         echo '<p class="empty1">No subjects available for your class!</p>';
       }
       ?>
 

@@ -76,13 +76,6 @@ if (isset($_POST['submit'])) {
          <option value="active">Active</option>
          <option value="deactive">Deactive</option>
       </select>
-      <p>Select Class <span>*</span></p>
-      <select name="class" class="box" required>
-         <option value="" selected disabled>-- Select Class --</option>
-         <option value="class1">Class 1</option>
-         <option value="class2">Class 2</option>
-         <option value="class3">Class 3</option>
-      </select>
       <p>Subject title <span>*</span></p>
       <input type="text" name="title" maxlength="100" required placeholder="Enter Subject Title" class="box">
       <p>Subject description <span>*</span></p>

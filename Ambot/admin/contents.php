@@ -36,10 +36,10 @@ if(isset($_POST['delete_video'])){
    <title>Dashboard</title>
    <link rel="stylesheet" href="../css/admin_style.css">
    <style>
-   .strand-humms, .strand-ict {
+   .strand-group {
+      margin-bottom: 20px;
       padding: 10px;
       border-radius: 8px;
-      margin-bottom: 15px;
       border-left: 4px solid;
    }
 
@@ -55,100 +55,105 @@ if(isset($_POST['delete_video'])){
 
    .strand-title {
       text-align: center;
-      font-size: 20px;
+      font-size: 18px;
       font-weight: bold;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
       color: #333;
    }
 
-   .strand-group .box {
-      padding: 8px;
-      border-radius: 6px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin-bottom: 8px;
-      font-size: 14px;
+   .box-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
    }
 
-   .strand-group .box .thumb {
+   .box {
+      padding: 10px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      background: #fff;
+      text-align: center;
+   }
+
+   .thumb {
       width: 100%;
-      height: auto;
-      max-height: 100px;
+      height: 120px;
       object-fit: cover;
       border-radius: 4px;
    }
 
-   .strand-group .box .title {
+   .title {
       font-size: 14px;
+      margin-top: 5px;
+      font-weight: bold;
+   }
+
+   .flex {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+   }
+
+   .btn, .delete-btn {
+      font-size: 12px;
+      padding: 4px 8px;
       margin-top: 5px;
    }
 
-   .strand-group .box .flex span {
-      font-size: 12px;
-   }
-
-   .strand-group .box .btn,
-   .strand-group .box .delete-btn {
-      font-size: 12px;
-      padding: 4px 8px;
-   }
-</style>
+   </style>
 </head>
 <body>
 <?php include '../components/admin_header.php'; ?>
 
 <section class="contents">
    <h1 class="heading">List of Resources</h1>
-   <div class="box-container">
-      <div class="box" style="text-align: center;">
-         <h3 class="title">Create New Resources</h3>
-         <a href="add_content.php" class="btn">Add Resources</a>
-      </div>
-      
-      <?php
-      $select_videos = $conn->prepare("SELECT c.*, p.title AS subject, p.strand 
-                                       FROM `content` c 
-                                       INNER JOIN `playlist` p ON c.playlist_id = p.id 
-                                       WHERE c.tutor_id = ? 
-                                       ORDER BY p.strand, p.title, c.date DESC");
-      $select_videos->execute([$tutor_id]);
-      $resources = $select_videos->fetchAll(PDO::FETCH_ASSOC);
-      
-      $current_strand = '';
+   
+   <?php
+   $select_videos = $conn->prepare("SELECT c.*, p.title AS subject, p.strand 
+                                    FROM `content` c 
+                                    INNER JOIN `playlist` p ON c.playlist_id = p.id 
+                                    WHERE c.tutor_id = ? 
+                                    ORDER BY p.strand, p.title, c.date DESC");
+   $select_videos->execute([$tutor_id]);
+   $resources = $select_videos->fetchAll(PDO::FETCH_ASSOC);
+   
+   $current_strand = '';
 
-      foreach ($resources as $video) {
-         if ($current_strand != $video['strand']) {
-            if ($current_strand != '') {
-               echo '</div>'; 
-            }
-            $current_strand = $video['strand'];
-
-            $strand_class = ($current_strand == 'HUMMS') ? 'strand-humms' : 'strand-ict';
-
-            echo "<div class='strand-group $strand_class'>";
-            echo "<h2 class='strand-title'>$current_strand Resources</h2>";
+   foreach ($resources as $video) {
+      if ($current_strand != $video['strand']) {
+         if ($current_strand != '') {
+            echo '</div>'; 
          }
-         ?>
-         <div class="box">
-            <div class="flex">
-               <div><i class="fas fa-dot-circle" style="color: <?= $video['status'] == 'active' ? 'limegreen' : 'red'; ?>;"></i><span><?= $video['status']; ?></span></div>
-               <div><i class="fas fa-calendar"></i><span><?= $video['date']; ?></span></div>
-            </div>
-            <img src="../uploaded_files/<?= $video['thumb']; ?>" class="thumb" alt="">
-            <h3 class="title">[<?= $video['subject']; ?>] <?= $video['title']; ?></h3>
-            <form action="" method="post" class="flex-btn">
-               <input type="hidden" name="video_id" value="<?= $video['id']; ?>">
-               <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this video?');" name="delete_video">
-            </form>
-            <a href="view_content.php?get_id=<?= $video['id']; ?>" class="btn">View Resources</a>
-         </div>
-         <?php
-      }
-      if ($current_strand != '') {
-         echo '</div>'; 
+         $current_strand = $video['strand'];
+
+         $strand_class = ($current_strand == 'HUMMS') ? 'strand-humms' : 'strand-ict';
+
+         echo "<div class='strand-group $strand_class'>";
+         echo "<h2 class='strand-title'>$current_strand Resources</h2>";
+         echo "<div class='box-container'>";
       }
       ?>
-   </div>
+      <div class="box">
+         <div class="flex">
+            <div><i class="fas fa-dot-circle" style="color: <?= $video['status'] == 'active' ? 'limegreen' : 'red'; ?>;"></i><span><?= $video['status']; ?></span></div>
+            <div><i class="fas fa-calendar"></i><span><?= $video['date']; ?></span></div>
+         </div>
+         <img src="../uploaded_files/<?= $video['thumb']; ?>" class="thumb" alt="">
+         <h3 class="title">[<?= $video['subject']; ?>] <?= $video['title']; ?></h3>
+         <form action="" method="post" class="flex-btn">
+            <input type="hidden" name="video_id" value="<?= $video['id']; ?>">
+            <input type="submit" value="delete" class="delete-btn" onclick="return confirm('delete this video?');" name="delete_video">
+         </form>
+         <a href="view_content.php?get_id=<?= $video['id']; ?>" class="btn">View Resources</a>
+      </div>
+      <?php
+   }
+   if ($current_strand != '') {
+      echo '</div></div>'; 
+   }
+   ?>
 </section>
+
 <?php include '../components/footer.php'; ?>
 <script src="../js/admin_script.js"></script>
 </body>

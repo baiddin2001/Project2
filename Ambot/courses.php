@@ -1,4 +1,4 @@
-<?php
+  <?php
 
 include 'components/connect.php';
 

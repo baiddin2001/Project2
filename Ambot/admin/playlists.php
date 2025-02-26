@@ -14,8 +14,14 @@ if(isset($_GET['strand']) && isset($_GET['class_id'])){
    $strand = $_GET['strand'];
    $class_id = $_GET['class_id'];
 } else {
-   header('location:classes.php?strand=' . $strand); // Redirect if no strand or class is selected
+   header('location:classes.php?strand=' . $strand);
 }
+
+// Fetch class name
+$class_query = $conn->prepare("SELECT class_name FROM `classes` WHERE id = ? AND tutor_id = ?");
+$class_query->execute([$class_id, $tutor_id]);
+$class_data = $class_query->fetch(PDO::FETCH_ASSOC);
+$class_name = $class_data['class_name'] ?? 'Unknown Class';
 
 ?>
 
@@ -24,7 +30,7 @@ if(isset($_GET['strand']) && isset($_GET['class_id'])){
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title><?= $strand; ?> Subjects for Class <?= $class_id; ?></title>
+   <title><?= htmlspecialchars($strand); ?> Subjects for <?= htmlspecialchars($class_name); ?></title>
    <link rel="stylesheet" href="../css/admin_style.css">
 </head>
 <body>
@@ -32,12 +38,12 @@ if(isset($_GET['strand']) && isset($_GET['class_id'])){
 <?php include '../components/admin_header.php'; ?>
 
 <section class="playlists">
-   <h1 class="heading"><?= $strand; ?> Subjects for Class <?= $class_id; ?></h1>
+   <h1 class="heading"><?= htmlspecialchars($strand); ?> Subjects for <?= htmlspecialchars($class_name); ?></h1>
 
    <div class="box-container">
       <div class="box" style="text-align: center;">
          <h3 class="title">Create New Subject</h3>
-         <a href="add_playlist.php?strand=<?= $strand; ?>&class_id=<?= $class_id; ?>" class="btn">Add Subject</a>
+         <a href="add_playlist.php?strand=<?= htmlspecialchars($strand); ?>&class_id=<?= htmlspecialchars($class_id); ?>" class="btn">Add Subjects</a>
       </div>
 
       <?php
@@ -53,8 +59,8 @@ if(isset($_GET['strand']) && isset($_GET['class_id'])){
                $total_videos = $count_videos->rowCount();
       ?>
       <div class="box">
-         <h3 class="title"><?= $fetch_playlist['title']; ?></h3>
-         <p class="description"><?= $fetch_playlist['description']; ?></p>
+         <h3 class="title"><?= htmlspecialchars($fetch_playlist['title']); ?></h3>
+         <p class="description"><?= htmlspecialchars($fetch_playlist['description']); ?></p>
          <a href="view_playlist.php?get_id=<?= $playlist_id; ?>" class="btn">View Lessons</a>
          <form action="" method="post" class="flex-btn">
             <input type="hidden" name="playlist_id" value="<?= $playlist_id; ?>">

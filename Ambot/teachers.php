@@ -82,7 +82,7 @@ if(isset($_COOKIE['user_id'])){
    </div>
    <div style="margin-top: 15px; color: #555;">
       <p style="font-size: 14px; color: #2d2d2d;">Total Learning Materials: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_playlists; ?></span></p>
-      <p style="font-size: 14px; color: #2d2d2d;">Total Uploaded Videos: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_contents ?></span></p>
+      <p style="font-size: 14px; color: #2d2d2d;">Total Uploaded Resources: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_contents ?></span></p>
       <p style="font-size: 14px; color: #2d2d2d;">Total Likes: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_likes ?></span></p>
       <p style="font-size: 14px; color: #2d2d2d;">Total Comments: <span style="font-weight: bold; color: #2d2d2d;"><?= $total_comments ?></span></p>
    </div>
@@ -131,7 +131,7 @@ if(isset($_COOKIE['user_id'])){
 
 
 
-
+         
 
 
 

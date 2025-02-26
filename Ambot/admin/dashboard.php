@@ -61,7 +61,7 @@ $total_comments = $select_comments->rowCount();
       <div class="box">
          <h3><?= $total_playlists; ?></h3>
          <p>Total Number of Subjects</p>
-         <a href="add_playlist.php" class="btn">Add Subject</a>
+         <a href="select_strand.php" class="btn">Add Subject</a>
       </div>
 
       <!-- <div class="box">

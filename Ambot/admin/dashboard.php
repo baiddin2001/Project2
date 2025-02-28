@@ -17,13 +17,17 @@ $select_playlists = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ?"
 $select_playlists->execute([$tutor_id]);
 $total_playlists = $select_playlists->rowCount();
 
-$select_likes = $conn->prepare("SELECT * FROM `likes` WHERE tutor_id = ?");
-$select_likes->execute([$tutor_id]);
-$total_likes = $select_likes->rowCount();
-
 $select_comments = $conn->prepare("SELECT * FROM `comments` WHERE tutor_id = ?");
 $select_comments->execute([$tutor_id]);
 $total_comments = $select_comments->rowCount();
+
+$select_humms_users = $conn->prepare("SELECT * FROM `users` WHERE strand = 'HUMMS'");
+$select_humms_users->execute();
+$total_humms_users = $select_humms_users->rowCount();
+
+$select_ict_users = $conn->prepare("SELECT * FROM `users` WHERE strand = 'ICT'");
+$select_ict_users->execute();
+$total_ict_users = $select_ict_users->rowCount();
 
 ?>
 
@@ -35,23 +39,16 @@ $total_comments = $select_comments->rowCount();
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Dashboard</title>
 
-   <!-- font awesome cdn link  -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-
-   <!-- custom css file link  -->
    <link rel="stylesheet" href="../css/admin_style.css">
-
 </head>
 <body>
 
 <?php include '../components/admin_header.php'; ?>
    
 <section class="dashboard">
-
    <h1 class="heading">dashboard</h1>
-
    <div class="box-container">
-
       <div class="box">
          <h3><?= $total_contents; ?></h3>
          <p>Total Number of Resources</p>
@@ -64,48 +61,27 @@ $total_comments = $select_comments->rowCount();
          <a href="select_strand.php" class="btn">Add Subject</a>
       </div>
 
-      <!-- <div class="box">
-         <h3><?= $total_likes; ?></h3>
-         <p>Total Likes</p>
-         <a href="contents.php" class="btn">View Contents</a>
-      </div> -->
-
       <div class="box">
          <h3><?= $total_comments; ?></h3>
          <p>Total Comments</p>
          <a href="comments.php" class="btn">View Comments</a>
       </div>
-
-      <!-- <div class="box">
-         <h3>Quick Select</h3>
-         <p>Login or Register</p>
-         <div class="flex-btn">
-            <a href="login.php" class="option-btn">login</a>
-            <a href="register.php" class="option-btn">register</a>
-         </div> -->
+      
+      <div class="box">
+         <h3><?= $total_humms_users; ?></h3>
+         <p>Total Number of Users in HUMMS</p>
+         <a href="users.php?strand=HUMMS" class="btn">View Users</a>
       </div>
-
+      
+      <div class="box">
+         <h3><?= $total_ict_users; ?></h3>
+         <p>Total Number of Users in ICT</p>
+         <a href="users.php?strand=ICT" class="btn">View Users</a>
+      </div>
    </div>
-
 </section>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <?php include '../components/footer.php'; ?>
-
 <script src="../js/admin_script.js"></script>
-
 </body>
 </html>

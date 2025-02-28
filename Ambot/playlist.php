@@ -52,17 +52,20 @@ if(isset($_POST['save_list'])){
    <link rel="stylesheet" href="css/style.css">
    <style>
       .back-button {
+         display: block !important; 
          position: absolute;
-         top: 20px;
+         top: 130px; 
          right: 20px;
-         background-color: #f3f3f3;
-         color: #333;
-         padding: 8px 16px;
-         border: 1px solid #ddd;
+         background-color: #66bb6a;
+         color: black;
+         font-weight: 500;
+         padding: 8px 25px;
+         border: 2px solid #ddd;
          border-radius: 5px;
          text-decoration: none;
-         font-size: 14px;
+         font-size: 18px;
          transition: background-color 0.3s ease;
+         z-index: 1000;
       }
       .back-button:hover {
          background-color: #e0e0e0;
@@ -71,9 +74,11 @@ if(isset($_POST['save_list'])){
 </head>
 <body>
 
-<?php include 'components/user_header.php'; ?>
+<a href="javascript:history.back()" class="back-button">
+   <i class="fas fa-arrow-left"></i> Back
+</a>
 
-<a href="javascript:history.back()" class="back-button">Back</a>
+<?php include 'components/user_header.php'; ?>
 
 <!-- this is for the video area -->
 <section class="courses1">

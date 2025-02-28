@@ -85,9 +85,32 @@ if(isset($_POST['delete'])){
    <!-- custom css file link  -->
    <link rel="stylesheet" href="../css/admin_style.css">
 
+   <style>
+      .back-button {
+         display: block !important; 
+         position: absolute;
+         top: 110px; 
+         right: 20px;
+         background-color: #66bb6a;
+         color: black;
+         font-weight: 500;
+         padding: 8px 25px;
+         border: 2px solid #ddd;
+         border-radius: 5px;
+         text-decoration: none;
+         font-size: 18px;
+         transition: background-color 0.3s ease;
+         z-index: 1000;
+      }
+      .back-button:hover {
+         background-color: #e0e0e0;
+      }
+   </style>
 </head>
 <body>
-
+<a href="javascript:history.back()" class="back-button">
+   <i class="fas fa-arrow-left"></i> Back
+</a>
 <?php include '../components/admin_header.php'; ?>
    
 <section class="playlist-form">

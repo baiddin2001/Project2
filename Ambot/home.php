@@ -103,9 +103,8 @@ $total_bookmarked = $select_bookmark->rowCount();
 
 <?php
 } else {
-    // Redirect to login page if the user is not logged in
     header("Location: login.php");
-    exit(); // Make sure to exit after redirecting
+    exit(); 
 }
 ?>
    

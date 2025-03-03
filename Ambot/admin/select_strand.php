@@ -1,5 +1,3 @@
-<!-- select_strand.php -->
-
 <?php
 
 include '../components/connect.php';

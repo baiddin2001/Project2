@@ -9,7 +9,6 @@ if(isset($_COOKIE['tutor_id'])){
    header('location:login.php');
 }
 
-// Get the strand and class from the URL
 if(isset($_GET['strand']) && isset($_GET['class_id'])){
    $strand = $_GET['strand'];
    $class_id = $_GET['class_id'];
@@ -17,7 +16,6 @@ if(isset($_GET['strand']) && isset($_GET['class_id'])){
    header('location:classes.php?strand=' . $strand);
 }
 
-// Fetch class name
 $class_query = $conn->prepare("SELECT class_name FROM `classes` WHERE id = ? AND tutor_id = ?");
 $class_query->execute([$class_id, $tutor_id]);
 $class_data = $class_query->fetch(PDO::FETCH_ASSOC);
@@ -72,7 +70,7 @@ $class_name = $class_data['class_name'] ?? 'Unknown Class';
       </div>
 
       <?php
-         // Fetch playlists that are linked to the specific class and strand
+         
          $select_playlist = $conn->prepare("SELECT * FROM `playlist` WHERE tutor_id = ? AND strand = ? AND class_id = ? ORDER BY date DESC");
          $select_playlist->execute([$tutor_id, $strand, $class_id]);
 

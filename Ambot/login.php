@@ -30,7 +30,6 @@ if(isset($_COOKIE['user_id'])){
    $user_id = '';
 }
 
-// Signup logic but redirects to login page instead of auto-login
 if (isset($_POST['submit_signup'])) {
    $id = unique_id();
    $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
@@ -95,7 +94,6 @@ if (isset($_POST['submit_signup'])) {
             <option value="HUMMS">HUMMS</option>
          </select>
 
-         <!-- Classes Dropdown (Initially empty) -->
          <select name="class" id="class" required>
             <option value="">Select Your Class</option>
          </select>
@@ -155,14 +153,12 @@ if (isset($_POST['submit_signup'])) {
       document.getElementById('container').classList.remove("right-panel-active");
    });
 
-   // Fetch classes based on strand
    const strandSelect = document.getElementById('strand');
    const classSelect = document.getElementById('class');
 
    strandSelect.addEventListener('change', function() {
       const selectedStrand = this.value;
 
-      // Clear previous options
       classSelect.innerHTML = '<option value="">Select Your Class</option>';
 
       if (selectedStrand) {

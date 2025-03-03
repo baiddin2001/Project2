@@ -29,7 +29,6 @@ $select_ict_users = $conn->prepare("SELECT * FROM users WHERE strand = 'ICT'");
 $select_ict_users->execute();
 $total_ict_users = $select_ict_users->rowCount();
 
-// Fetch classes for each strand
 $select_humms_classes = $conn->prepare("SELECT * FROM classes WHERE tutor_id = ? AND strand = 'HUMMS'");
 $select_humms_classes->execute([$tutor_id]);
 

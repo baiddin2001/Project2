@@ -9,18 +9,17 @@ if(isset($_COOKIE['tutor_id'])){
    header('location:login.php');
 }
 
-// Get the strand from the URL
 if(isset($_GET['strand'])){
    $strand = $_GET['strand'];
 } else {
-   header('location:strand-selection.php'); // Redirect if no strand is selected
+   header('location:strand-selection.php'); 
 }
 
 if(isset($_POST['create_class'])){
    $class_name = $_POST['class_name'];
 
    if(!empty($class_name)){
-      // Insert new class with strand into the database
+      
       $insert_class = $conn->prepare("INSERT INTO `classes` (tutor_id, class_name, strand) VALUES (?, ?, ?)");
       $insert_class->execute([$tutor_id, $class_name, $strand]);
 
@@ -50,15 +49,12 @@ if(isset($_POST['create_class'])){
    }
 }
 
-// Handle class deletion
 if(isset($_GET['delete_class'])){
    $class_id = $_GET['delete_class'];
 
-   // Check if the class exists and delete it
    $delete_class = $conn->prepare("DELETE FROM `classes` WHERE id = ? AND tutor_id = ?");
    $delete_class->execute([$class_id, $tutor_id]);
 
-   // Redirect back to the same page to reflect changes
    header('location:classes.php?strand=' . $strand);
 }
 
@@ -190,7 +186,6 @@ if(isset($_GET['delete_class'])){
 <section class="class-management">
    <div class="header-container">
       <h1 class="heading">Classes for <?= $strand; ?> Strand</h1>
-      <!-- Create New Class Form (aligned to the right) -->
       <form class="create-class-form" action="" method="post">
          <input type="text" name="class_name" placeholder="Enter class" required maxlength="50">
          <input type="submit" name="create_class" value="Create Class">
@@ -199,7 +194,6 @@ if(isset($_GET['delete_class'])){
 
    <div class="box-container">
       <?php
-         // Fetch all the classes created by the tutor for the selected strand
          $select_classes = $conn->prepare("SELECT * FROM `classes` WHERE tutor_id = ? AND strand = ? ORDER BY class_name ASC");
          $select_classes->execute([$tutor_id, $strand]);
 
@@ -210,7 +204,6 @@ if(isset($_GET['delete_class'])){
       <div class="box">
          <h3 class="title"><?= $fetch_class['class_name']; ?></h3>
          <a href="playlists.php?strand=<?= $strand; ?>&class_id=<?= $class_id; ?>" class="btn">View Subjects</a>
-         <!-- Delete Button -->
          <a href="classes.php?strand=<?= $strand; ?>&delete_class=<?= $class_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this class?')">Delete</a>
       </div>
       <?php

@@ -1,7 +1,6 @@
 <?php
 include '../components/connect.php';
 
-// Check if tutor is logged in
 if (isset($_COOKIE['tutor_id'])) {
     $tutor_id = $_COOKIE['tutor_id'];
 } else {
@@ -10,16 +9,15 @@ if (isset($_COOKIE['tutor_id'])) {
     exit();
 }
 
-// Get strand and class from URL
 if (isset($_GET['strand']) && isset($_GET['class_id'])) {
     $strand = $_GET['strand'];
-    $class_id = $_GET['class_id']; // Get class_id from URL
+    $class_id = $_GET['class_id']; 
 } else {
-    header('location:classes.php?strand=' . $strand); // Redirect if no strand or class is selected
+    header('location:classes.php?strand=' . $strand); 
     exit();
 }
 
-// Handle form submission
+
 if (isset($_POST['submit'])) {
     $id = unique_id();
     $title = $_POST['title'];
@@ -29,7 +27,6 @@ if (isset($_POST['submit'])) {
     $status = $_POST['status'];
     $status = filter_var($status, FILTER_SANITIZE_STRING);
     
-    // Image upload
     $image = $_FILES['image']['name'];
     $image = filter_var($image, FILTER_SANITIZE_STRING);
     $ext = pathinfo($image, PATHINFO_EXTENSION);
@@ -37,7 +34,6 @@ if (isset($_POST['submit'])) {
     $image_tmp_name = $_FILES['image']['tmp_name'];
     $image_folder = '../uploaded_files/' . $rename;
 
-    // Insert into the database, making sure to include class_id
     $add_playlist = $conn->prepare("INSERT INTO `playlist` (id, tutor_id, title, description, thumb, status, strand, class_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     $add_playlist->execute([$id, $tutor_id, $title, $description, $rename, $status, $strand, $class_id]);
 
@@ -56,10 +52,8 @@ if (isset($_POST['submit'])) {
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Add Subject</title>
 
-   <!-- Font Awesome CDN -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-   <!-- Custom CSS -->
    <link rel="stylesheet" href="../css/admin_style.css">
    <style>
       .back-button {

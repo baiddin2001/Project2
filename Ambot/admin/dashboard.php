@@ -73,14 +73,14 @@ $select_ict_classes->execute([$tutor_id]);
 
       <div class="box">
          <h3><?= $total_humms_users; ?></h3>
-         <p>Total Number of Users in HUMMS</p>
-         <button onclick="showClassPopup('HUMMS')" class="btn">View Users</button>
+         <p>Total Number of Students in HUMMS</p>
+         <button onclick="showClassPopup('HUMMS')" class="btn">View Students</button>
       </div>
       
       <div class="box">
          <h3><?= $total_ict_users; ?></h3>
-         <p>Total Number of Users in ICT</p>
-         <button onclick="showClassPopup('ICT')" class="btn">View Users</button>
+         <p>Total Number of Students in ICT</p>
+         <button onclick="showClassPopup('ICT')" class="btn">View Students</button>
       </div>
    </div>
 </section>

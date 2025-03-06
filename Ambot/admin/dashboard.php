@@ -7,8 +7,38 @@ if(isset($_COOKIE['tutor_id'])){
 }else{
    $tutor_id = '';
    header('location:login.php');
+   exit;
 }
 
+// Check if 'users' table has 'strand' column
+$check_users_columns = $conn->query("SHOW COLUMNS FROM users LIKE 'strand'");
+if ($check_users_columns->rowCount() > 0) {
+   $select_humms_users = $conn->prepare("SELECT * FROM users WHERE strand = 'HUMMS'");
+   $select_humms_users->execute();
+   $total_humms_users = $select_humms_users->rowCount();
+
+   $select_ict_users = $conn->prepare("SELECT * FROM users WHERE strand = 'ICT'");
+   $select_ict_users->execute();
+   $total_ict_users = $select_ict_users->rowCount();
+} else {
+   $total_humms_users = 0;
+   $total_ict_users = 0;
+}
+
+// Check if 'classes' table exists before querying
+$check_classes_table = $conn->query("SHOW TABLES LIKE 'classes'");
+if ($check_classes_table->rowCount() > 0) {
+   $select_humms_classes = $conn->prepare("SELECT * FROM classes WHERE tutor_id = ? AND strand = 'HUMMS'");
+   $select_humms_classes->execute([$tutor_id]);
+
+   $select_ict_classes = $conn->prepare("SELECT * FROM classes WHERE tutor_id = ? AND strand = 'ICT'");
+   $select_ict_classes->execute([$tutor_id]);
+} else {
+   $select_humms_classes = [];
+   $select_ict_classes = [];
+}
+
+// Count total content, playlists, and comments
 $select_contents = $conn->prepare("SELECT * FROM content WHERE tutor_id = ?");
 $select_contents->execute([$tutor_id]);
 $total_contents = $select_contents->rowCount();
@@ -21,21 +51,8 @@ $select_comments = $conn->prepare("SELECT * FROM comments WHERE tutor_id = ?");
 $select_comments->execute([$tutor_id]);
 $total_comments = $select_comments->rowCount();
 
-$select_humms_users = $conn->prepare("SELECT * FROM users WHERE strand = 'HUMMS'");
-$select_humms_users->execute();
-$total_humms_users = $select_humms_users->rowCount();
-
-$select_ict_users = $conn->prepare("SELECT * FROM users WHERE strand = 'ICT'");
-$select_ict_users->execute();
-$total_ict_users = $select_ict_users->rowCount();
-
-$select_humms_classes = $conn->prepare("SELECT * FROM classes WHERE tutor_id = ? AND strand = 'HUMMS'");
-$select_humms_classes->execute([$tutor_id]);
-
-$select_ict_classes = $conn->prepare("SELECT * FROM classes WHERE tutor_id = ? AND strand = 'ICT'");
-$select_ict_classes->execute([$tutor_id]);
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

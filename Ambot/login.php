@@ -96,7 +96,11 @@ if (isset($_POST['submit_signup'])) {
 
          <select name="class" id="class" required>
             <option value="">Select Your Class</option>
+            <option value="0">Class 1</option>
+            <option value="0">Class 2</option>
+            <option value="0">Class 3</option>
          </select>
+         
          <input type="password" name="pass" placeholder="Enter your Password" maxlength="20" required>
          <input type="password" name="cpass" placeholder="Confirm your Password" maxlength="20" required>
          <span class="profile_pic">Please select your photo <span>*</span></span>
@@ -151,29 +155,6 @@ if (isset($_POST['submit_signup'])) {
    });
    document.getElementById('signIn').addEventListener('click', () => {
       document.getElementById('container').classList.remove("right-panel-active");
-   });
-
-   const strandSelect = document.getElementById('strand');
-   const classSelect = document.getElementById('class');
-
-   strandSelect.addEventListener('change', function() {
-      const selectedStrand = this.value;
-
-      classSelect.innerHTML = '<option value="">Select Your Class</option>';
-
-      if (selectedStrand) {
-         fetch(`fetch_classes.php?strand=${selectedStrand}`)
-            .then(response => response.json())
-            .then(data => {
-               data.forEach(classItem => {
-                  const option = document.createElement('option');
-                  option.value = classItem.id;
-                  option.textContent = classItem.class_name;
-                  classSelect.appendChild(option);
-               });
-            })
-            .catch(error => console.error('Error fetching classes:', error));
-      }
    });
 </script>
 <footer class="footer1">

@@ -34,6 +34,17 @@ if(isset($_COOKIE['tutor_id'])){
    <h1 class="heading">Select Strand</h1>
 
    <div class="box-container">
+    <?php
+    $fetch_strands = $conn->prepare("SELECT * FROM `strands`");
+    $fetch_strands->execute();
+    while ($strand = $fetch_strands->fetch(PDO::FETCH_ASSOC)) {
+    ?>
+        <a href="classes.php?strand=<?= htmlspecialchars($strand['name']); ?>" class="box">
+            <h3><?= htmlspecialchars($strand['name']); ?></h3>
+        </a>
+    <?php } ?>
+   </div>
+
    <a href="classes.php?strand=HUMMS" class="box">
    <h3>HUMMS</h3>
    </a>

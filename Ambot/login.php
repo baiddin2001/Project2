@@ -93,6 +93,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
                 <option value="">Select Your Strand</option>
                 <option value="ICT">ICT</option>
                 <option value="HUMMS">HUMMS</option>
+                <?php
+                include_once 'components/connect.php'; 
+                $fetch_strands = $conn->prepare("SELECT * FROM `strands`");
+                $fetch_strands->execute();
+                while ($row = $fetch_strands->fetch(PDO::FETCH_ASSOC)) {
+                    echo "<option value='{$row['name']}'>{$row['name']}</option>";
+                }
+                ?>
             </select>
             <select name="class" id="class" required>
                 <option value="">Select Your Class</option>
@@ -169,6 +177,30 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
         document.getElementById('student-login').style.display = 'none';
         document.getElementById('admin-login').style.display = 'block';
     });
+
+    const strandSelect = document.getElementById('strand');
+   const classSelect = document.getElementById('class');
+
+   strandSelect.addEventListener('change', function() {
+      const selectedStrand = this.value;
+
+      classSelect.innerHTML = '<option value="">Select Your Class</option>';
+
+      if (selectedStrand) {
+         fetch(`fetch_classes.php?strand=${selectedStrand}`)
+            .then(response => response.json())
+            .then(data => {
+               data.forEach(classItem => {
+                  const option = document.createElement('option');
+                  option.value = classItem.id;
+                  option.textContent = classItem.class_name;
+                  classSelect.appendChild(option);
+               });
+            })
+            .catch(error => console.error('Error fetching classes:', error));
+      }
+   });
+
 </script>
 
 <footer class="footer1">

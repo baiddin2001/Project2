@@ -7,19 +7,20 @@ if(isset($_COOKIE['tutor_id'])){
 }else{
    $tutor_id = '';
    header('location:login.php');
+   exit();
 }
 
 if(isset($_GET['strand'])){
    $strand = $_GET['strand'];
 } else {
-   header('location:strand-selection.php'); 
+   header('location:select_strand.php'); 
+   exit();
 }
 
 if(isset($_POST['create_class'])){
    $class_name = $_POST['class_name'];
 
    if(!empty($class_name)){
-      
       $insert_class = $conn->prepare("INSERT INTO `classes` (tutor_id, class_name, strand) VALUES (?, ?, ?)");
       $insert_class->execute([$tutor_id, $class_name, $strand]);
 
@@ -56,6 +57,7 @@ if(isset($_GET['delete_class'])){
    $delete_class->execute([$class_id, $tutor_id]);
 
    header('location:classes.php?strand=' . $strand);
+   exit();
 }
 
 ?>
@@ -65,7 +67,7 @@ if(isset($_GET['delete_class'])){
 <head>
    <meta charset="UTF-8">
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Manage Classes - <?= $strand; ?> </title>
+   <title>Manage Classes - <?= htmlspecialchars($strand); ?> </title>
    <link rel="stylesheet" href="../css/admin_style.css">
    <style>
       .class-management .header-container {
@@ -124,8 +126,8 @@ if(isset($_GET['delete_class'])){
          border-radius: 8px;
          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
          transition: all 0.3s ease;
-         font-size: 16px; /* Ensures readability */
-         line-height: 1.5; /* Line spacing for better readability */
+         font-size: 16px;
+         line-height: 1.5;
       }
 
       .class-management .box:hover {
@@ -134,7 +136,7 @@ if(isset($_GET['delete_class'])){
       }
 
       .class-management .box .title {
-         font-size: 20px; /* Larger font size for titles */
+         font-size: 20px;
          font-weight: bold;
          margin-bottom: 15px;
          color: #333;
@@ -148,7 +150,7 @@ if(isset($_GET['delete_class'])){
          border-radius: 4px;
          cursor: pointer;
          text-decoration: none;
-         font-size: 16px; /* Larger text for the button */
+         font-size: 16px;
       }
 
       .class-management .box .btn:hover {
@@ -185,7 +187,7 @@ if(isset($_GET['delete_class'])){
 
 <section class="class-management">
    <div class="header-container">
-      <h1 class="heading">Classes for <?= $strand; ?> Strand</h1>
+      <h1 class="heading">Classes for <?= htmlspecialchars($strand); ?> Strand</h1>
       <form class="create-class-form" action="" method="post">
          <input type="text" name="class_name" placeholder="Enter class" required maxlength="50">
          <input type="submit" name="create_class" value="Create Class">
@@ -202,9 +204,9 @@ if(isset($_GET['delete_class'])){
                $class_id = $fetch_class['id'];
       ?>
       <div class="box">
-         <h3 class="title"><?= $fetch_class['class_name']; ?></h3>
-         <a href="playlists.php?strand=<?= $strand; ?>&class_id=<?= $class_id; ?>" class="btn">View Subjects</a>
-         <a href="classes.php?strand=<?= $strand; ?>&delete_class=<?= $class_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this class?')">Delete</a>
+         <h3 class="title"><?= htmlspecialchars($fetch_class['class_name']); ?></h3>
+         <a href="playlists.php?strand=<?= htmlspecialchars($strand); ?>&class_id=<?= $class_id; ?>" class="btn">View Subjects</a>
+         <a href="classes.php?strand=<?= htmlspecialchars($strand); ?>&delete_class=<?= $class_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this class?')">Delete</a>
       </div>
       <?php
             }

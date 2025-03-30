@@ -54,8 +54,6 @@ $strands = $fetch_strands->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-<?php include '../components/admin_header.php'; ?>
-
 <section class="manage-strands">
     <h1>Manage Strands</h1>
 
@@ -93,31 +91,64 @@ $strands = $fetch_strands->fetchAll(PDO::FETCH_ASSOC);
         font-family: Arial, sans-serif;
         padding: 20px;
     }
+    
     .manage-strands {
-        width: 50%;
+        width: 80%;
+        max-width: 900px;
         margin: auto;
         text-align: center;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     }
+    
+    h1 {
+        font-size: 28px; /* Increased title size */
+    }
+
+    form input, form button {
+        font-size: 18px; /* Bigger input text and button */
+        padding: 10px;
+    }
+
     table {
         width: 100%;
         margin-top: 20px;
         border-collapse: collapse;
+        font-size: 18px; /* Increased table text size */
     }
+    
     th, td {
-        padding: 10px;
+        padding: 14px; /* Slightly larger padding */
         border: 1px solid #ddd;
     }
+    
     th {
         background-color: #f4f4f4;
+        font-size: 20px; /* Increased table header size */
     }
+    
     .message {
         color: green;
+        font-weight: bold;
+        font-size: 18px; /* Larger message text */
     }
+    
     .delete-btn {
-        color: red;
+        color: white;
         text-decoration: none;
+        background: red;
+        padding: 8px 12px;
+        font-size: 16px; /* Increased button text size */
+        border-radius: 5px;
+    }
+    
+    .delete-btn:hover {
+        background: darkred;
     }
 </style>
+
 
 <script src="../js/admin_script.js"></script>
 

@@ -44,14 +44,6 @@ if(isset($_COOKIE['tutor_id'])){
         </a>
     <?php } ?>
    </div>
-
-   <a href="classes.php?strand=HUMMS" class="box">
-   <h3>HUMMS</h3>
-   </a>
-   <a href="classes.php?strand=ICT" class="box">
-   <h3>ICT</h3>
-   </a>
-   </div>
 </section>
 
 <?php include '../components/footer.php'; ?>

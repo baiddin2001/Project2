@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
     
     if ($select_admin->rowCount() > 0) {
         $_SESSION['admin_id'] = $row['id'];
-        header('location:admin/admin_dashboard.php');
+        header('location:admin/admin_strands.php');
         exit();
     } else {
         echo "Invalid admin email or password!";

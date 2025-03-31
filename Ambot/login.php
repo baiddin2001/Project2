@@ -21,23 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_login'])) {
     }
 }
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login'])) {
-    $email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
-    $pass = sha1($_POST['pass']);
-    $pass = filter_var($pass, FILTER_SANITIZE_STRING);
 
-    $select_admin = $conn->prepare("SELECT * FROM `admins` WHERE email = ? AND password = ? LIMIT 1");
-    $select_admin->execute([$email, $pass]);
-    $row = $select_admin->fetch(PDO::FETCH_ASSOC);
-    
-    if ($select_admin->rowCount() > 0) {
-        $_SESSION['admin_id'] = $row['id'];
-        header('location:admin/admin_dashboard.php');
-        exit();
-    } else {
-        echo "Invalid admin email or password!";
-    }
-}
 ?>
 
 <!DOCTYPE html>
@@ -127,7 +111,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
         </form> 
     </div>
 
-    <!-- Admin Login -->
+    <!-- Admin Login
     <div class="form-container admin-login-container" id="admin-login">
     <form action="" method="post" class="login">
         <h1>Admin Login</h1>
@@ -138,7 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
             <a href="admin/admin_register.php" style="color: blue;">Register here</a>
         </p>
     </form> 
-    </div>
+    </div> -->
 
     <div class="overlay-container">
         <div class="overlay">
@@ -151,7 +135,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
                 <h1>Hello, Student!</h1>
                 <p>Don't have an account yet? Sign up now!</p>
                 <button class="ghost" id="signUp">Sign Up</button>
-                <button class="admin-btn" id="adminLogin">Admin Login</button>
+                <!-- <button class="admin-btn" id="adminLogin">Admin Login</button> -->
             </div>
         </div>
     </div>
@@ -172,11 +156,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
         document.getElementById('admin-login').style.display = 'none';
     });
 
-    document.getElementById('adminLogin').addEventListener('click', () => {
-        document.getElementById('signup-container').style.display = 'none';
-        document.getElementById('student-login').style.display = 'none';
-        document.getElementById('admin-login').style.display = 'block';
-    });
+    // document.getElementById('adminLogin').addEventListener('click', () => {
+    //     document.getElementById('signup-container').style.display = 'none';
+    //     document.getElementById('student-login').style.display = 'none';
+    //     document.getElementById('admin-login').style.display = 'block';
+    // });
 
     const strandSelect = document.getElementById('strand');
    const classSelect = document.getElementById('class');
@@ -185,7 +169,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
       const selectedStrand = this.value;
 
       classSelect.innerHTML = '<option value="">Select Your Class</option>';
-
       if (selectedStrand) {
          fetch(`fetch_classes.php?strand=${selectedStrand}`)
             .then(response => response.json())

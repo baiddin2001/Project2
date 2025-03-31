@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_admin_login']))
     if ($row && password_verify($_POST['pass'], $row['password'])) { 
         // Password matches
         $_SESSION['admin_id'] = $row['id'];
-        header('location:admin/admin_strands.php');
+        header('location:admin/admin_dashboard.php');
         exit();
     } else {
         echo "<script>alert('Invalid admin email or password!');</script>";

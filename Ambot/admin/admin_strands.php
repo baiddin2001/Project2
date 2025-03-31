@@ -92,7 +92,7 @@ $teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
         <a href="admin_teachers_students.php">
             <i class="fas fa-users"></i><span>Students/Teachers</span>
         </a>
-        <a href="../components/admin_logout.php" onclick="return confirm('Logout from this website?');">
+        <a href="../admin_login.php" onclick="return confirm('Logout from this website?');">
             <i class="fas fa-right-from-bracket"></i><span>LOGOUT</span>
         </a>
     </nav>

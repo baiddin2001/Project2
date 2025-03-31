@@ -21,22 +21,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_login'])) {
     }
 }
 
-
-<<<<<<< HEAD
-    $select_admin = $conn->prepare("SELECT * FROM `admins` WHERE email = ? AND password = ? LIMIT 1");
-    $select_admin->execute([$email, $pass]);
-    $row = $select_admin->fetch(PDO::FETCH_ASSOC);
-    
-    if ($select_admin->rowCount() > 0) {
-        $_SESSION['admin_id'] = $row['id'];
-        header('location:admin/admin_strands.php');
-        exit();
-    } else {
-        echo "Invalid admin email or password!";
-    }
-}
-=======
->>>>>>> fa22620d171c8a8313e4eeca9ffd23a0bfcb3526
 ?>
 
 <!DOCTYPE html>

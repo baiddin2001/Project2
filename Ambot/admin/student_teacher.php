@@ -39,20 +39,19 @@ if (!isset($_SESSION['admin_id'])) {
     </nav>
 </div>
 
-<section class="strand-selection">
+<section class="strand-selection" style="margin-left: 8cm;">
    <h1 class="heading">Please Select</h1>
 
    <div class="box-container">
-   <a href="teacher_list.php" class="box">
-   <h3>Teacher list</h3>
-   </a>
-   <a href="student_list.php" class="box">
-   <h3>Student List</h3>
-   </a>
-
-
+      <a href="teacher_list.php" class="box">
+         <h3>Teacher list</h3>
+      </a>
+      <a href="student_list.php" class="box">
+         <h3>Student List</h3>
+      </a>
    </div>
 </section>
+
 
 
 <style>
@@ -68,7 +67,7 @@ if (!isset($_SESSION['admin_id'])) {
 </style>
 
     <style>
-        .header {
+       .header {
             display: flex;
             justify-content: center;
             align-items: center;
@@ -79,7 +78,7 @@ if (!isset($_SESSION['admin_id'])) {
             width: 100%;
             position: fixed;
             top: 0;
-            left: 0;
+            left: 4cm;
             z-index: 1000;
         }
 

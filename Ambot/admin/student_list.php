@@ -60,11 +60,11 @@ if ($check_users_columns) {
             flex-wrap: wrap;
             gap: 20px;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 2cm;
         }
 
         .box {
-            background: linear-gradient(135deg, #007BFF, #0056b3);
+            background: linear-gradient(135deg, #4CAF50,rgb(54, 124, 56));
             color: white;
             padding: 20px;
             border-radius: 10px;
@@ -102,7 +102,7 @@ if ($check_users_columns) {
             text-align: left;
         }
         th {
-            background-color: #007BFF;
+            background-color: #4CAF50
             color: white;
         }
         tr:nth-child(even) {
@@ -143,12 +143,52 @@ if ($check_users_columns) {
         .delete-btn:hover {
             background: darkred;
         }
+
+        .header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 0;
+            background-color: #f4f4f4;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 4cm;
+            z-index: 1000;
+        }
+
+        .back-button {
+         display: block !important; 
+         position: fixed;
+         top: 10px; 
+         right: 20px;
+         background-color: #66bb6a;
+         color: black;
+         font-weight: 500;
+         padding: 8px 25px;
+         border: 2px solid #ddd;
+         border-radius: 5px;
+         text-decoration: none;
+         font-size: 18px;
+         transition: background-color 0.3s ease;
+         z-index: 2000;
+      }
+      .back-button:hover {
+         background-color: #e0e0e0;
+      }
     </style>
+
+    
 </head>
 <body>
 <header class="header">
     <span class="logo">PTCI ONLINE LEARNING MATERIAL SYSTEM</span>
 </header>
+<a href="javascript:history.back()" class="back-button">
+   <i class="fas fa-arrow-left"></i> Back
+</a>
 
 <div class="side-bar">
     <nav class="navbar">
@@ -166,6 +206,7 @@ if ($check_users_columns) {
         </a>
     </nav>
 </div>
+
 
 <section class="dashboard">
     <div class="box">

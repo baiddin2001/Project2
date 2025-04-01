@@ -45,6 +45,7 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../css/admin_style.css">
 </head>
 <style>
+
     .update-btn {
     background-color: #007bff; /* Blue color */
     color: white;
@@ -60,11 +61,49 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
     background-color: #0056b3; /* Darker blue on hover */
 }
 
+.header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px 0;
+            background-color: #f4f4f4;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 4cm;
+            z-index: 1000;
+        }
+
+        .back-button {
+         display: block !important; 
+         position: fixed;
+         top: 10px; 
+         right: 20px;
+         background-color: #66bb6a;
+         color: black;
+         font-weight: 500;
+         padding: 8px 25px;
+         border: 2px solid #ddd;
+         border-radius: 5px;
+         text-decoration: none;
+         font-size: 18px;
+         transition: background-color 0.3s ease;
+         z-index: 2000;
+      }
+      .back-button:hover {
+         background-color: #e0e0e0;
+      }
+
 </style>
 <body>
 <header class="header">
     <span class="logo">PTCI ONLINE LEARNING MATERIAL SYSTEM</span>
 </header>
+<a href="javascript:history.back()" class="back-button">
+   <i class="fas fa-arrow-left"></i> Back
+</a>
 
 <div class="side-bar">
     <nav class="navbar">
@@ -127,14 +166,25 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
 
 <style>
     body { font-family: Arial, sans-serif; padding: 20px; }
-    .manage-tutors { width: 80%; max-width: 900px; margin: auto; text-align: center; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+    .manage-tutors {
+        width: 80%;
+        max-width: 900px;
+        margin: 2cm auto;
+        margin-left: 11.5cm; /* Adjusts the left margin */
+        text-align: center;
+        padding: 20px;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
     h1 { font-size: 28px; }
     table { width: 100%; margin-top: 20px; border-collapse: collapse; font-size: 18px; }
     th, td { padding: 14px; border: 1px solid #ddd; }
     th { background-color: #f4f4f4; font-size: 20px; }
     .delete-btn { background-color: red; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 5px; }
 </style>
-
+33
 <?php include '../components/footer.php'; ?>
 <script src="../js/admin_script.js"></script>
 </body>

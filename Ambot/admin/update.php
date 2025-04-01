@@ -128,7 +128,7 @@ if(isset($_POST['submit'])){
          <div class="col">
             <p>Your Name </p>
             <input type="text" name="name" placeholder="<?= $fetch_profile['name']; ?>" maxlength="50"  class="box">
-            <p>Your Profession </p>
+            <!-- <p>Your Profession </p>
             <select name="profession" class="box">
                <option value="" selected><?= $fetch_profile['profession']; ?></option>
                <option value="Developer">Developer</option>
@@ -142,7 +142,7 @@ if(isset($_POST['submit'])){
                <option value="Doctor">Doctor</option>
                <option value="Journalist">Journalist</option>
                <option value="Photographer">Photographer</option>
-            </select>
+            </select> -->
             <p>Your Email </p>
             <input type="email" name="email" placeholder="<?= $fetch_profile['email']; ?>" maxlength="100"  class="box">
          </div>

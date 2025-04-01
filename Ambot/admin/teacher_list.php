@@ -127,18 +127,17 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
     <table>
         <thead>
             <tr>
-                <!-- <th>Image</th> -->
                 <th>Name</th>
                 <th>Email</th>
                 <th>Status</th>
                 <th>Update Status</th>
+                <th>Edit</th>
                 <th>Delete</th>
             </tr>
         </thead>
         <tbody>
             <?php foreach ($tutors as $tutor) { ?>
                 <tr>
-                    <!-- <td> <img src="../uploads/<?= htmlspecialchars($tutor['image']); ?>" alt="Tutor Image" width="50" height="50" style="border-radius: 50%;"> </td> -->
                     <td><?= htmlspecialchars($tutor['name']); ?></td>
                     <td><?= htmlspecialchars($tutor['email']); ?></td>
                     <td><?= htmlspecialchars($tutor['status']); ?></td>
@@ -151,6 +150,9 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
                             </select>
                             <button type="submit" name="update_status" class="update-btn">Update</button>
                         </form>
+                    </td>
+                    <td>
+                        <a href="admin_edit_teacher.php?id=<?= $tutor['id']; ?>" class="update-btn">Edit</a>
                     </td>
                     <td>
                         <form action="" method="post" onsubmit="return confirm('Are you sure you want to delete this tutor?');">
@@ -184,7 +186,7 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
     th { background-color: #f4f4f4; font-size: 20px; }
     .delete-btn { background-color: red; color: white; border: none; padding: 8px 12px; cursor: pointer; border-radius: 5px; }
 </style>
-33
+
 <?php include '../components/footer.php'; ?>
 <script src="../js/admin_script.js"></script>
 </body>

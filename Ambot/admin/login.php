@@ -1,4 +1,3 @@
-
 <?php
 include_once '../components/connect.php';
 ?>
@@ -36,8 +35,7 @@ if(isset($_POST['submit_admin_signup'])){
    $id = unique_id();
    $name = $_POST['name'];
    $name = filter_var($name, FILTER_SANITIZE_STRING);
-   $profession = $_POST['profession'];
-   $profession = filter_var($profession, FILTER_SANITIZE_STRING);
+   $profession = "Teacher";
    $email = $_POST['email'];
    $email = filter_var($email, FILTER_SANITIZE_STRING);
    $pass = sha1($_POST['pass']);
@@ -70,7 +68,6 @@ if(isset($_POST['submit_admin_signup'])){
    }
 
 }
-
 ?>
 
 
@@ -105,24 +102,6 @@ if(isset($_POST['submit_admin_signup'])){
             <input type="email" name="email" placeholder="Enter your email" maxlength="50" required class="box">
 			 <input type="password" name="pass" placeholder="Enter your password" maxlength="20" required class="box">
              <input type="password" name="cpass" placeholder="Confirm your password" maxlength="20" required class="box">
-
-             <span class ="profession">Your Profession 
-             <select name="profession" class="box" required>
-               <option value="" disabled selected>--Select your profession</option>
-               <option value="Developer">Developer</option>
-               <option value="Designer">Designer</option>
-               <option value="Musician">Musician</option>
-               <option value="Biologist">Biologist</option>
-               <option value="Teacher">Teacher</option>
-               <option value="Engineer">Engineer</option>
-               <option value="Lawyer">Lawyer</option>
-               <option value="Accountant">Accountant</option>
-               <option value="Doctor">Doctor</option>
-               <option value="Journalist">Journalist</option>
-               <option value="Photographer">Photographer</option>
-            </select>
-
-            </span>
             
             <span  class="profile_pic">Please select your photo <span>*</span></span>
             <input type="file" name="image" accept="image/*" required class="box">
@@ -136,8 +115,7 @@ if(isset($_POST['submit_admin_signup'])){
 			<span>Log in using your email and password.</span>
 			<input type="email" name="email" placeholder="Enter your Email" maxlength="100" required >
             <input type="password" name="pass" placeholder="Enter your Password" maxlength="20" required >
-			<!-- <button><input type="submit" name="submit" value="login now"></button> -->
-             <br>
+			 <br>
             <button type="submit" name="submit_admin_login" value="login now" >Login Now</button>
             <p class="link">Are you an Student? <a href="../Login.php" style="color: blue;">Login here</a></p>
             
@@ -180,8 +158,5 @@ if(isset($_POST['submit_admin_signup'])){
 
 </footer>
 
-<!-- custom js file link  -->
-
-   
 </body>
 </html>

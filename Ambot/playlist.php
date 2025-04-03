@@ -84,37 +84,46 @@ if(isset($_POST['save_list'])){
 <section class="courses1">
    <h1 class="heading1" style="color: black;">Playlist Videos</h1>
    <div class="box-container1">
-         <?php
-         $select_content = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ? AND status = ? AND video IS NOT NULL AND video != '' AND video != 'none' ORDER BY date DESC");
-         $select_content->execute([$get_id, 'active']);
+      <?php
+      $select_content = $conn->prepare("SELECT * FROM `content` WHERE playlist_id = ? AND status = ? AND video IS NOT NULL AND video != '' AND video != 'none' ORDER BY date DESC");
+      $select_content->execute([$get_id, 'active']);
 
-         if($select_content->rowCount() > 0){
-            while($fetch_content = $select_content->fetch(PDO::FETCH_ASSOC)){  
-               $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
-               $select_tutor->execute([$fetch_content['tutor_id']]);
-               $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
-         ?>
-         <div class="box-container1">
-            <div class="box1">
-               <div class="tutor1">
-                  <img src="uploaded_files/<?= $fetch_tutor['image']; ?>" alt="">
-                  <div>
-                     <h3 style="color: black;"> <?= $fetch_tutor['name']; ?> </h3>
-                     <span><?= $fetch_content['date']; ?></span>
-                  </div>
+      if($select_content->rowCount() > 0){
+         while($fetch_content = $select_content->fetch(PDO::FETCH_ASSOC)){
+            $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
+            $select_tutor->execute([$fetch_content['tutor_id']]);
+            $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
+
+            // Check if tutor data is found
+            if ($fetch_tutor) {
+               $tutor_image = $fetch_tutor['image'];
+               $tutor_name = $fetch_tutor['name'];
+            } else {
+               // Set default values if no tutor data is found
+               $tutor_image = 'default.jpg';
+               $tutor_name = 'Unknown Tutor';
+            }
+      ?>
+      <div class="box-container1">
+         <div class="box1">
+            <div class="tutor1">
+               <img src="uploaded_files/<?= htmlspecialchars($tutor_image); ?>" alt="Tutor Image">
+               <div>
+                  <h3 style="color: black;"> <?= htmlspecialchars($tutor_name); ?> </h3>
+                  <span><?= $fetch_content['date']; ?></span>
                </div>
-               <img src="uploaded_files/<?= $fetch_content['thumb']; ?>" class="thumb1" alt="">
-               <h3 style="color: black;" class="title1"> <?= $fetch_content['title']; ?> </h3>
-               <a href="watch_video.php?get_id=<?= $fetch_content['id']; ?>" class="inline-btn1">Watch Video</a>
             </div>
+            <img src="uploaded_files/<?= htmlspecialchars($fetch_content['thumb']); ?>" class="thumb1" alt="Course Thumbnail">
+            <h3 style="color: black;" class="title1"> <?= htmlspecialchars($fetch_content['title']); ?> </h3>
+            <a href="watch_video.php?get_id=<?= $fetch_content['id']; ?>" class="inline-btn1">Watch Video</a>
          </div>
-         <?php
+      </div>
+      <?php
+         }
+      } else {
+         echo '<p class="empty1">No videos added yet!</p>';
       }
-   } else {
-      echo '<p class="empty1">No videos added yet!</p>';
-   }
-?>
-
+      ?>
    </div>
 </section>
 

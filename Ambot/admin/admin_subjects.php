@@ -71,7 +71,7 @@ $teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
             transition: 0.3s;
             height: 60px;
             width: 100%; /* Make it take full width of container */
-            max-width: 350px; /* Ensure consistency */
+            max-width: 400px; /* Ensure consistency */
         }
 
         .box:hover {

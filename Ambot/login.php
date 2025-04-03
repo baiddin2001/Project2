@@ -21,8 +21,56 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_login'])) {
     }
 }
 
-
 ?>
+
+<?php
+if(isset($_COOKIE['user_id'])){
+   $user_id = $_COOKIE['user_id'];
+} else {
+   $user_id = '';
+}
+
+if (isset($_POST['submit_signup'])) {
+   $id = unique_id();
+   $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
+   $email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
+   $strand = filter_var($_POST['strand'], FILTER_SANITIZE_STRING);
+   $pass = sha1($_POST['pass']);
+   $pass = filter_var($pass, FILTER_SANITIZE_STRING);
+   
+   $cpass = sha1($_POST['cpass']);
+   $cpass = filter_var($cpass, FILTER_SANITIZE_STRING);
+
+   $image = $_FILES['image']['name'];
+   $image = filter_var($image, FILTER_SANITIZE_STRING);
+   $ext = pathinfo($image, PATHINFO_EXTENSION);
+   $rename = unique_id().'.'.$ext;
+
+   $image_tmp_name = $_FILES['image']['tmp_name'];
+   $image_folder = 'uploaded_files/'.$rename;
+
+   $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
+   $select_user->execute([$email]);
+
+
+   if($select_user->rowCount() > 0){
+      $message[] = 'Email already taken!';
+   } else {
+      if($pass != $cpass){
+         $message[] = 'Confirm password does not match!';
+      } else {
+         $insert_user = $conn->prepare("INSERT INTO `users`(id, name, email, password, image, strand) VALUES(?,?,?,?,?,?)");
+         $insert_user->execute([$id, $name, $email, $cpass, $rename, $strand]);         
+         move_uploaded_file($image_tmp_name, $image_folder);
+
+         // ✅ Redirect to login page instead of auto-login
+         header('location: login.php');
+         exit();
+      }
+   }
+}
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -73,22 +121,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_login'])) {
             <span class="span1">Create your account and begin your academic journey today!</span>
             <input type="text" name="name" placeholder="Enter your Name" maxlength="50" required autocomplete="off">
             <input type="email" name="email" placeholder="Enter your Email" maxlength="100" required autocomplete="off">
-            <select name="strand" id="strand" required>
-                <option value="">Select Your Strand</option>
-                <option value="ICT">ICT</option>
-                <option value="HUMMS">HUMMS</option>
-                <?php
-                include_once 'components/connect.php'; 
-                $fetch_strands = $conn->prepare("SELECT * FROM `strands`");
-                $fetch_strands->execute();
-                while ($row = $fetch_strands->fetch(PDO::FETCH_ASSOC)) {
-                    echo "<option value='{$row['name']}'>{$row['name']}</option>";
-                }
-                ?>
-            </select>
-            <select name="class" id="class" required>
+            <form action="" method="post" enctype="multipart/form-data">
+    <!-- Other form fields -->
+    <select name="strand" id="strand" required>
+        <?php
+        include_once 'components/connect.php'; 
+        $fetch_strands = $conn->prepare("SELECT * FROM `strands`");
+        $fetch_strands->execute();
+
+        // Fetch selected strand from user data if available
+        $selected_strand = ''; 
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            $select_user = $conn->prepare("SELECT strand FROM users WHERE id = ?");
+            $select_user->execute([$user_id]);
+            $user_data = $select_user->fetch(PDO::FETCH_ASSOC);
+            if ($user_data) {
+                $selected_strand = $user_data['strand'];
+            }
+        }
+
+        while ($row = $fetch_strands->fetch(PDO::FETCH_ASSOC)) {
+            $selected = ($row['name'] == $selected_strand) ? 'selected' : '';
+            echo "<option value='{$row['name']}' {$selected}>{$row['name']}</option>";
+        }
+        ?>
+    </select>
+
+            <!-- <select name="class" id="class" required>
                 <option value="">Select Your Class</option>
-            </select>
+            </select> -->
             <input type="password" name="pass" placeholder="Enter your Password" maxlength="20" required autocomplete="off">
             <input type="password" name="cpass" placeholder="Confirm your Password" maxlength="20" required autocomplete="off">
             <span class="profile_pic">Please select your photo <span>*</span></span>

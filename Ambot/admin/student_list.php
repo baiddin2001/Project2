@@ -1,4 +1,6 @@
-<?php
+
+    
+<<?php
 session_start();
 include '../components/connect.php';
 
@@ -13,8 +15,11 @@ $tutor_id = $_SESSION['tutor_id'] ?? null; // Ensure tutor_id is set
 $limit = 10;
 $humms_page = isset($_GET['humms_page']) ? (int)$_GET['humms_page'] : 1;
 $ict_page = isset($_GET['ict_page']) ? (int)$_GET['ict_page'] : 1;
+$tvl_he_page = isset($_GET['tvl_he_page']) ? (int)$_GET['tvl_he_page'] : 1;
+
 $humms_offset = ($humms_page - 1) * $limit;
 $ict_offset = ($ict_page - 1) * $limit;
+$tvl_he_offset = ($tvl_he_page - 1) * $limit;
 
 // Handle student deletion
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['delete_student'])) {
@@ -36,13 +41,24 @@ if ($check_users_columns) {
     $select_ict_users->execute();
     $ict_users = $select_ict_users->fetchAll(PDO::FETCH_ASSOC);
 
+    $select_tvl_he_users = $conn->prepare("SELECT * FROM users WHERE COALESCE(NULLIF(strand, ''), 'TVL-HE') = 'TVL-HE' LIMIT $limit OFFSET $tvl_he_offset");
+    $select_tvl_he_users->execute();
+    $tvl_he_users = $select_tvl_he_users->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Count the total number of students for each strand (no change needed here for HUMMS and ICT)
     $total_humms_users = $conn->query("SELECT COUNT(*) FROM users WHERE strand = 'HUMMS'")->fetchColumn();
     $total_ict_users = $conn->query("SELECT COUNT(*) FROM users WHERE strand = 'ICT'")->fetchColumn();
+    
+    // Total count for TVL-HE, including those with blank or null strand
+    $total_tvl_he_users = $conn->query("SELECT COUNT(*) FROM users WHERE COALESCE(NULLIF(strand, ''), 'TVL-HE') = 'TVL-HE'")->fetchColumn();
+  
 } else {
     $humms_users = [];
     $ict_users = [];
+    $tvl_he_users = [];
     $total_humms_users = 0;
     $total_ict_users = 0;
+    $total_tvl_he_users = 0;
 }
 ?>
 
@@ -54,6 +70,11 @@ if ($check_users_columns) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_style.css">
     <style>
+        /* Same as the previous CSS */
+    </style>
+</head>
+
+        <style>
 
         .dashboard {
             display: flex;
@@ -139,7 +160,7 @@ if ($check_users_columns) {
             font-size: 10px;
             border-radius: 5px;
         }
-        
+
         .delete-btn:hover {
             background: darkred;
         }
@@ -160,28 +181,25 @@ if ($check_users_columns) {
         }
 
         .back-button {
-         display: block !important; 
-         position: fixed;
-         top: 10px; 
-         right: 20px;
-         background-color: #66bb6a;
-         color: black;
-         font-weight: 500;
-         padding: 8px 25px;
-         border: 2px solid #ddd;
-         border-radius: 5px;
-         text-decoration: none;
-         font-size: 18px;
-         transition: background-color 0.3s ease;
-         z-index: 2000;
-      }
-      .back-button:hover {
-         background-color: #e0e0e0;
-      }
-    </style>
-
-    
-</head>
+        display: block !important; 
+        position: fixed;
+        top: 10px; 
+        right: 20px;
+        background-color: #66bb6a;
+        color: black;
+        font-weight: 500;
+        padding: 8px 25px;
+        border: 2px solid #ddd;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 18px;
+        transition: background-color 0.3s ease;
+        z-index: 2000;
+        }
+        .back-button:hover {
+        background-color: #e0e0e0;
+        }
+        </style>
 <body>
 <header class="header">
     <span class="logo">PTCI ONLINE LEARNING MATERIAL SYSTEM</span>
@@ -207,7 +225,6 @@ if ($check_users_columns) {
     </nav>
 </div>
 
-
 <section class="dashboard">
     <div class="box">
         <h3><?= $total_humms_users; ?></h3>
@@ -217,8 +234,14 @@ if ($check_users_columns) {
         <h3><?= $total_ict_users; ?></h3>
         <p>Total Number of Students in ICT</p>
     </div>
+    <div class="box">
+        <h3><?= $total_tvl_he_users; ?></h3>
+        <p>Total Number of Students in TVL-HE</p>
+    </div>
 </section>
+
 <section class="student-list">
+    <!-- HUMMS Students -->
     <h2>HUMMS Students</h2>
     <table>
         <tr><th>Photo</th><th>Name</th><th>Email</th><th>Action</th></tr>
@@ -241,6 +264,7 @@ if ($check_users_columns) {
         <?php endfor; ?>
     </div>
 
+    <!-- ICT Students -->
     <h2>ICT Students</h2>
     <table>
         <tr><th>Photo</th><th>Name</th><th>Email</th><th>Action</th></tr>
@@ -251,7 +275,7 @@ if ($check_users_columns) {
                 <td><?= htmlspecialchars($user['email']); ?></td>
                 <td>
                     <form method="POST" onsubmit="return confirm('Are you sure you want to delete this student?');">
-                        <button type="submit" name="delete_student" value="<?= $user['id']; ?>" class="delete-btn">  <i class="fas fa-trash"></i> Delete</button>
+                        <button type="submit" name="delete_student" value="<?= $user['id']; ?>" class="delete-btn"> <i class="fas fa-trash"></i> Delete</button>
                     </form>
                 </td>
             </tr>
@@ -260,6 +284,29 @@ if ($check_users_columns) {
     <div class="pagination">
         <?php for ($i = 1; $i <= ceil($total_ict_users / $limit); $i++): ?>
             <a href="?ict_page=<?= $i; ?>"><?= $i; ?></a>
+        <?php endfor; ?>
+    </div>
+
+    <!-- TVL-HE Students -->
+    <h2>TVL-HE Students</h2>
+    <table>
+        <tr><th>Photo</th><th>Name</th><th>Email</th><th>Action</th></tr>
+        <?php foreach ($tvl_he_users as $user): ?>
+            <tr>
+                <td><img src="../uploaded_files/<?= htmlspecialchars($user['image']); ?>" alt="Student Photo" class="student-photo"></td>
+                <td><?= htmlspecialchars($user['name']); ?></td>
+                <td><?= htmlspecialchars($user['email']); ?></td>
+                <td>
+                    <form method="POST" onsubmit="return confirm('Are you sure you want to delete this student?');">
+                        <button type="submit" name="delete_student" value="<?= $user['id']; ?>" class="delete-btn"> <i class="fas fa-trash"></i> Delete</button>
+                    </form>
+                </td>
+            </tr>
+        <?php endforeach; ?>
+    </table>
+    <div class="pagination">
+        <?php for ($i = 1; $i <= ceil($total_tvl_he_users / $limit); $i++): ?>
+            <a href="?tvl_he_page=<?= $i; ?>"><?= $i; ?></a>
         <?php endfor; ?>
     </div>
 </section>

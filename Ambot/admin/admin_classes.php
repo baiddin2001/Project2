@@ -14,8 +14,8 @@ $fetch_teacher = $conn->prepare("SELECT name FROM tutors WHERE id = ?");
 $fetch_teacher->execute([$tutor_id]);
 $teacher = $fetch_teacher->fetch(PDO::FETCH_ASSOC);
 
-// Fetch classes assigned to this teacher
-$fetch_classes = $conn->prepare("SELECT id, class_name FROM classes WHERE tutor_id = ?");
+// Fetch classes assigned to this teacher, excluding 'sample class' and 'class a'
+$fetch_classes = $conn->prepare("SELECT id, class_name FROM classes WHERE tutor_id = ? AND class_name NOT IN ('sample class', 'class a')");
 $fetch_classes->execute([$tutor_id]);
 $classes = $fetch_classes->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -61,7 +61,7 @@ $classes = $fetch_classes->fetchAll(PDO::FETCH_ASSOC);
             max-width: 800px;
         }
         .class-box {
-            background:rgb(71, 122, 66);
+            background: rgb(71, 122, 66);
             color: white;
             padding: 15px;
             text-align: center;

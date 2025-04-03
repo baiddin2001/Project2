@@ -1,4 +1,4 @@
-  <?php
+<?php
 
 include 'components/connect.php';
 
@@ -60,8 +60,6 @@ if (!empty($user_class_id)) {
 
 <section class="courses1">
 
-   <h1 class="heading1" style="color: black;">Subjects for <?= htmlspecialchars($user_strand); ?> - <?= htmlspecialchars($class_name); ?></h1>
-
    <div class="box-container1">
 
       <?php
@@ -71,20 +69,26 @@ if (!empty($user_class_id)) {
       if($select_courses->rowCount() > 0){
          while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
             $course_id = $fetch_course['id'];
+            $tutor_id = $fetch_course['tutor_id'];
 
-            $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
-            $select_tutor->execute([$fetch_course['tutor_id']]);
+            // Fetch tutor details
+            $select_tutor = $conn->prepare("SELECT name, image FROM `tutors` WHERE id = ?");
+            $select_tutor->execute([$tutor_id]);
             $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
+
+            // Default values if tutor data is missing
+            $tutor_name = $fetch_tutor ? $fetch_tutor['name'] : 'Unknown Tutor';
+            $tutor_image = $fetch_tutor ? $fetch_tutor['image'] : 'default.jpg';
       ?>
       <div class="box1">
          <div class="tutor1">
-            <img src="uploaded_files/<?= htmlspecialchars($fetch_tutor['image']); ?>" alt="">
+            <img src="uploaded_files/<?= htmlspecialchars($tutor_image); ?>" alt="Tutor Image">
             <div>
-               <h3 style="color: black;"><?= htmlspecialchars($fetch_tutor['name']); ?></h3>
+               <h3 style="color: black;"><?= htmlspecialchars($tutor_name); ?></h3>
                <span><?= htmlspecialchars($fetch_course['date']); ?></span>
             </div>
          </div>
-         <img src="uploaded_files/<?= htmlspecialchars($fetch_course['thumb']); ?>" class="thumb1" alt="">
+         <img src="uploaded_files/<?= htmlspecialchars($fetch_course['thumb']); ?>" class="thumb1" alt="Course Thumbnail">
          <h3 style="color: black;" class="title1"><?= htmlspecialchars($fetch_course['title']); ?></h3>
          <a href="playlist.php?get_id=<?= $course_id; ?>" class="inline-btn1">View Resources</a>
       </div>

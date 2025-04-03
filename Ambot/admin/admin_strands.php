@@ -179,13 +179,14 @@ $teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
         
         .manage-strands {
             width: 80%;
-            max-width: 900px;
-            margin: 80px auto 20px; /* Increased top margin to 80px */
+            max-width: 1020px;
+            margin: 50px auto 20px; /* Increased top margin to 80px */
             text-align: center;
             padding: 20px;
             background: #fff;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            float: right; /* Aligns the table to the right */
         }
 
         

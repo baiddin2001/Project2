@@ -87,19 +87,6 @@ $total_comments = $select_comments->rowCount();
          <p>Total Number of Subjects</p>
          <a href="select_strand.php" class="btn">Add Subject</a>
       </div>
-
-      <div class="box">
-         <h3><?= $total_humms_users; ?></h3>
-         <p>Total Number of Students in HUMMS</p>
-         <button onclick="showClassPopup('HUMMS')" class="btn">View Students</button>
-      </div>
-      
-      <div class="box">
-         <h3><?= $total_ict_users; ?></h3>
-         <p>Total Number of Students in ICT</p>
-         <button onclick="showClassPopup('ICT')" class="btn">View Students</button>
-      </div>
-   </div>
 </section>
 
 <div id="classPopup" class="popup">

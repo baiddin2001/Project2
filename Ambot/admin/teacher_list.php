@@ -172,7 +172,7 @@ $tutors = $fetch_tutors->fetchAll(PDO::FETCH_ASSOC);
         width: 80%;
         max-width: 900px;
         margin: 2cm auto;
-        margin-left: 11.5cm; /* Adjusts the left margin */
+        margin-left: 9.5cm; /* Adjusts the left margin */
         text-align: center;
         padding: 20px;
         background: #fff;

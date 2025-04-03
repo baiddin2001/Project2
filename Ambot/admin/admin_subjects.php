@@ -62,7 +62,7 @@ $teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: #3498db;
+            background: 0 4px 8px rgba(0, 0, 0, 0.1);
             color: white;
             text-decoration: none;
             padding: 15px;

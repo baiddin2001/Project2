@@ -61,7 +61,7 @@ $classes = $fetch_classes->fetchAll(PDO::FETCH_ASSOC);
             max-width: 800px;
         }
         .class-box {
-            background: #3498db;
+            background:rgb(71, 122, 66);
             color: white;
             padding: 15px;
             text-align: center;

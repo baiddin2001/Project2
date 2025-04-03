@@ -32,7 +32,7 @@ $subjects = $fetch_subjects->fetchAll(PDO::FETCH_ASSOC);
 
 <header class="header">
     <span class="logo">PTCI ONLINE LEARNING MATERIAL SYSTEM</span>
-    <a href="admin_classes.php" class="back-button">Back</a>
+    <a href="javascript:history.back()" class="back-button">Back</a> <!-- Fixed back button -->
 </header>
 
 <div class="side-bar">
@@ -98,71 +98,71 @@ $subjects = $fetch_subjects->fetchAll(PDO::FETCH_ASSOC);
     border-radius: 5px;
     font-weight: bold;
     margin-left: auto;
+    cursor: pointer;
 }
 
+.back-button:hover {
+    background: #218838;
+}
 
-    .back-button:hover {
-        background: #218838;
-    }
+.manage-subjects {
+    margin-left: 270px;
+    padding: 30px;
+    margin-top: 80px;
+}
 
-    .manage-subjects {
-        margin-left: 270px;
-        padding: 30px;
-        margin-top: 80px;
-    }
+.manage-subjects h1 {
+    text-align: left;
+    font-size: 30px;
+    margin-bottom: 30px;
+    font-weight: bold;
+    color: #333;
+    margin-left: 10px;
+}
 
-    .manage-subjects h1 {
-        text-align: left;
-        font-size: 30px;
-        margin-bottom: 30px;
-        font-weight: bold;
-        color: #333;
-        margin-left: 10px;
-    }
+.subject-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
 
-    .subject-list {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-        padding: 20px;
-    }
+.subject-box {
+    background: linear-gradient(135deg, #4CAF50,rgb(54, 124, 56));
+    color: white;
+    padding: 20px;
+    text-align: left;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: 0.3s ease-in-out;
+}
 
-    .subject-box {
-        background: #3498db;
-        color: white;
-        padding: 20px;
-        text-align: left;
-        font-size: 18px;
-        font-weight: bold;
-        border-radius: 8px;
-        transition: 0.3s ease-in-out;
-    }
+.subject-box:hover {
+    background: #2980b9;
+    transform: scale(1.05);
+}
 
-    .subject-box:hover {
-        background: #2980b9;
-        transform: scale(1.05);
-    }
+.empty {
+    text-align: center;
+    font-size: 20px;
+    color: #e74c3c;
+    font-weight: bold;
+}
 
-    .empty {
-        text-align: center;
-        font-size: 20px;
-        color: #e74c3c;
-        font-weight: bold;
-    }
+@media (max-width: 800px) {
+    .side-bar { width: 200px; }
+    .header { left: 200px; width: calc(100% - 200px); }
+    .manage-subjects { margin-left: 210px; }
+    .subject-list { grid-template-columns: repeat(2, 1fr); }
+}
 
-    @media (max-width: 800px) {
-        .side-bar { width: 200px; }
-        .header { left: 200px; width: calc(100% - 200px); }
-        .manage-subjects { margin-left: 210px; }
-        .subject-list { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 600px) {
-        .side-bar { width: 180px; }
-        .header { left: 180px; width: calc(100% - 180px); }
-        .manage-subjects { margin-left: 190px; }
-        .subject-list { grid-template-columns: 1fr; }
-    }
+@media (max-width: 600px) {
+    .side-bar { width: 180px; }
+    .header { left: 180px; width: calc(100% - 180px); }
+    .manage-subjects { margin-left: 190px; }
+    .subject-list { grid-template-columns: 1fr; }
+}
 </style>
 
 </body>

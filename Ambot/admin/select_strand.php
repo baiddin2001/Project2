@@ -1,18 +1,18 @@
 <?php
 include '../components/connect.php';
 
-if(isset($_COOKIE['tutor_id'])){
-   $tutor_id = $_COOKIE['tutor_id'];
-}else{
-   header('location:login.php');
-   exit();
+if (isset($_COOKIE['tutor_id'])) {
+    $tutor_id = $_COOKIE['tutor_id'];
+} else {
+    header('location:login.php');
+    exit();
 }
 
-// Fetch assigned strands for the logged-in teacher
+// Fetch strands assigned to the logged-in teacher
 $fetch_strands = $conn->prepare("
     SELECT strands.* 
-    FROM `strands`
-    JOIN `strand_assignments` ON strands.id = strand_assignments.strand_id
+    FROM strands
+    INNER JOIN strand_assignments ON strands.id = strand_assignments.strand_id
     WHERE strand_assignments.teacher_id = ?
 ");
 $fetch_strands->execute([$tutor_id]);
@@ -36,12 +36,12 @@ $assigned_strands = $fetch_strands->fetchAll(PDO::FETCH_ASSOC);
 <section class="strand-selection">
    <h1 class="heading">Select Strand</h1>
 
-   <?php if(empty($assigned_strands)) { ?>
+   <?php if (empty($assigned_strands)) { ?>
        <p class="message">No strand assigned. Please contact the admin.</p>
    <?php } else { ?>
        <div class="box-container">
            <?php foreach ($assigned_strands as $strand) { ?>
-               <a href="classes.php?strand=<?= htmlspecialchars($strand['name']); ?>" class="box">
+               <a href="classes.php?strand=<?= urlencode($strand['name']); ?>" class="box">
                    <h3><?= htmlspecialchars($strand['name']); ?></h3>
                </a>
            <?php } ?>
@@ -49,16 +49,8 @@ $assigned_strands = $fetch_strands->fetchAll(PDO::FETCH_ASSOC);
    <?php } ?>
 </section>
 
+<?php include '../components/footer.php'; ?>
+
+<script src="../js/admin_script.js"></script>
 </body>
 </html>
-
-
-   <?php include '../components/footer.php'; ?>
-
-   <script src="../js/admin_script.js"></script>
-
-   </body>
-   </html>
-
-   <?php
-   ?>

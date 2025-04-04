@@ -7,21 +7,44 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 
-// Fetch all teachers
-$fetch_teachers = $conn->prepare("SELECT id, name FROM tutors");
-$fetch_teachers->execute();
-$teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
+// Fetch all strands
+$fetch_strands = $conn->prepare("SELECT id, name FROM strands");
+$fetch_strands->execute();
+$strands = $fetch_strands->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Manage Subjects</title>
+    <title>Manage Strands</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="../css/admin_style.css">
     <style>
-        /* Header */
+        /* General styles for the page */
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f4f4f4, #e0e0e0); /* Subtle background gradient */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .navbar a {
+            display: block;
+            padding: 15px;
+            text-decoration: none;
+            color: #ecf0f1;
+            font-size: 18px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            background-color: #2980b9;
+        }
+
         .header {
             position: fixed;
             top: 0;
@@ -35,82 +58,104 @@ $teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
             z-index: 1000;
         }
 
-        /* Main content */
-        .manage-subjects {
+        /* Main Content */
+        .manage-strands {
             margin-left: 270px;
-            margin-top: 80px;
-            padding: 20px;
-            text-align: left; /* Align text to the left */
+            margin-top: 100px;
+            padding: 30px;
         }
 
-        .manage-subjects h1 {
-            font-size: 24px;
+        .section-box-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            flex-direction: column;
+        }
+
+        .section-box {
+            background-color: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 900px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .section-box h1 {
+            color: #2c3e50;
+            font-size: 28px;
             margin-bottom: 20px;
         }
 
-        /* Teacher selection boxes - Aligned to the left */
+        /* Strand Buttons */
         .box-container {
             display: flex;
-            flex-direction: column; /* Stack boxes vertically */
-            align-items: flex-start; /* Align to the left */
-            gap: 15px;
-            max-width: 400px; /* Set a reasonable width */
+            justify-content: center; 
+            align-items: center; 
+            gap: 20px;
+            flex-wrap: wrap;
+            width: 100%;
+            margin-top: 20px; 
         }
 
         .box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            background: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #27ae60;
             color: white;
             text-decoration: none;
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px 40px;
+            border-radius: 10px;
             font-size: 18px;
-            transition: 0.3s;
-            height: 60px;
-            width: 100%; /* Make it take full width of container */
-            max-width: 400px; /* Ensure consistency */
+            width: 250px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .box:hover {
-            background: #2980b9;
+            background-color: #2ecc71;
+            transform: translateY(-5px);
         }
 
         .box h3 {
-            font-size: 16px;
             margin: 0;
-            text-align: center;
-            max-width: 90%;
-            word-wrap: break-word;
-            line-height: 1.4;
         }
 
         /* Responsive Design */
-        @media (max-width: 800px) {
+        @media (max-width: 768px) {
             .side-bar {
                 width: 200px;
             }
-            .header {
+
+            header {
                 left: 200px;
                 width: calc(100% - 200px);
             }
-            .manage-subjects {
-                margin-left: 210px;
+
+            .manage-strands {
+                margin-left: 220px;
+            }
+
+            .box {
+                width: 100%;
+                max-width: 300px;
             }
         }
 
-        @media (max-width: 600px) {
+        @media (max-width: 480px) {
             .side-bar {
                 width: 180px;
             }
-            .header {
-                left: 180px;
-                width: calc(100% - 180px);
+
+            .manage-strands {
+                margin-left: 200px;
             }
-            .manage-subjects {
-                margin-left: 190px;
+
+            .box {
+                width: 100%;
+                max-width: 250px;
             }
         }
     </style>
@@ -138,14 +183,18 @@ $teachers = $fetch_teachers->fetchAll(PDO::FETCH_ASSOC);
     PTCI ONLINE LEARNING MATERIAL SYSTEM
 </header>
 
-<section class="manage-subjects">
-    <h1>Select a Teacher</h1>
-    <div class="box-container">
-        <?php foreach ($teachers as $teacher) { ?>
-            <a href="admin_classes.php?tutor_id=<?= $teacher['id']; ?>" class="box">
-                <h3><?= htmlspecialchars($teacher['name']); ?></h3>
-            </a>
-        <?php } ?>
+<section class="manage-strands">
+    <div class="section-box-container">
+        <div class="section-box">
+            <h1>Select a Strand</h1>
+            <div class="box-container">
+                <?php foreach ($strands as $strand) { ?>
+                    <a href="admin_subject_list.php?strand_id=<?= $strand['id']; ?>" class="box">
+                        <h3><?= htmlspecialchars($strand['name']); ?></h3>
+                    </a>
+                <?php } ?>
+            </div>
+        </div>
     </div>
 </section>
 

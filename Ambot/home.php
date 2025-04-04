@@ -65,18 +65,29 @@ $total_bookmarked = $select_bookmark->rowCount();
 
          <!-- <h1 class="heading">latest courses</h1> -->
 
-   <div class="notification-container">
+   <<div class="notification-container">
          <h3 class="title1">Announcement</h3>
          <?php
-         $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? ORDER BY date DESC LIMIT 3");
-         $select_courses->execute(['active']);
-         if($select_courses->rowCount() > 0){
-            while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
-               $course_id = $fetch_course['id'];
+         // Get student's strand and class_id
+         $get_student = $conn->prepare("SELECT strand, class_id FROM `users` WHERE id = ?");
+         $get_student->execute([$user_id]);
+         $student_data = $get_student->fetch(PDO::FETCH_ASSOC);
 
-               $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
-               $select_tutor->execute([$fetch_course['tutor_id']]);
-               $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
+         if ($student_data) {
+            $strand = $student_data['strand'];
+            $class_id = $student_data['class_id'];
+
+            // Fetch courses that match the student's strand and class_id
+            $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? AND strand = ? AND class_id = ? ORDER BY date DESC LIMIT 3");
+            $select_courses->execute(['active', $strand, $class_id]);
+
+            if($select_courses->rowCount() > 0){
+               while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
+                  $course_id = $fetch_course['id'];
+
+                  $select_tutor = $conn->prepare("SELECT * FROM `tutors` WHERE id = ?");
+                  $select_tutor->execute([$fetch_course['tutor_id']]);
+                  $fetch_tutor = $select_tutor->fetch(PDO::FETCH_ASSOC);
          ?>
          <div class="notification-box info">
                <img src="uploaded_files/<?= $fetch_tutor['image']; ?>" alt="Tutor Image">
@@ -87,12 +98,16 @@ $total_bookmarked = $select_bookmark->rowCount();
                </div>
          </div>
          <?php
+               }
+            } else {
+               echo '<p class="empty">No relevant courses found for your strand and class.</p>';
             }
          } else {
-            echo '<p class="empty">No courses added yet!</p>';
+            echo '<p class="empty">Unable to retrieve student information.</p>';
          }
          ?>
 </div>
+
 
 <div class="more-btn">
    <a href="courses.php" class="inline-option-btn">View More</a>

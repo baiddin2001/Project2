@@ -205,7 +205,8 @@ if(isset($_GET['delete_class'])){
       ?>
       <div class="box">
          <h3 class="title"><?= htmlspecialchars($fetch_class['class_name']); ?></h3>
-         <a href="playlists.php?strand=<?= htmlspecialchars($strand); ?>&class_id=<?= $class_id; ?>" class="btn">View Subjects</a>
+         <!-- Forward both class_name and class_id -->
+         <a href="playlists.php?strand=<?= htmlspecialchars($strand); ?>&class_name=<?= urlencode($fetch_class['class_name']); ?>&class_id=<?= $class_id; ?>" class="btn">View Subjects</a>
          <a href="classes.php?strand=<?= htmlspecialchars($strand); ?>&delete_class=<?= $class_id; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this class?')">Delete</a>
       </div>
       <?php

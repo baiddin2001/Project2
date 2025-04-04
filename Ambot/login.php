@@ -21,6 +21,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['submit_login'])) {
     }
 }
 
+if (isset($_GET['strand'])) {
+    $strand = filter_var($_GET['strand'], FILTER_SANITIZE_STRING);
+
+    // Fetch classes based on the selected strand
+    $query = "SELECT * FROM `classes` WHERE `strand` = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$strand]);
+    $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Return the classes as a JSON response
+    echo json_encode($classes);
+}
+?>
+<?php
+
+if (isset($_GET['strand'])) {
+    $strand = filter_var($_GET['strand'], FILTER_SANITIZE_STRING);
+
+    // Fetch classes based on the selected strand
+    $query = "SELECT id, class_name FROM `classes` WHERE `strand` = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->execute([$strand]);
+    $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Return the classes as a JSON response
+    echo json_encode($classes);
+}
 ?>
 
 <?php
@@ -30,11 +57,27 @@ if(isset($_COOKIE['user_id'])){
    $user_id = '';
 }
 
+
 if (isset($_POST['submit_signup'])) {
    $id = unique_id();
    $name = filter_var($_POST['name'], FILTER_SANITIZE_STRING);
    $email = filter_var($_POST['email'], FILTER_SANITIZE_STRING);
    $strand = filter_var($_POST['strand'], FILTER_SANITIZE_STRING);
+   $class = filter_var($_POST['class'], FILTER_SANITIZE_STRING);
+
+   // Fetch the class ID from the database based on the selected strand and class name
+    $class_query = $conn->prepare("SELECT id FROM `classes` WHERE strand = ? AND class_name = ? LIMIT 1");
+    $class_query->execute([$strand, $class]);
+    $class_data = $class_query->fetch(PDO::FETCH_ASSOC);
+
+    // Get class_id
+    $class_id = $class_data['id'] ?? null;
+
+
+   if (empty($strand)) {
+       $strand = "HE";
+   }
+
    $pass = sha1($_POST['pass']);
    $pass = filter_var($pass, FILTER_SANITIZE_STRING);
    
@@ -52,15 +95,14 @@ if (isset($_POST['submit_signup'])) {
    $select_user = $conn->prepare("SELECT * FROM `users` WHERE email = ?");
    $select_user->execute([$email]);
 
-
    if($select_user->rowCount() > 0){
       $message[] = 'Email already taken!';
    } else {
       if($pass != $cpass){
          $message[] = 'Confirm password does not match!';
       } else {
-         $insert_user = $conn->prepare("INSERT INTO `users`(id, name, email, password, image, strand) VALUES(?,?,?,?,?,?)");
-         $insert_user->execute([$id, $name, $email, $cpass, $rename, $strand]);         
+        $insert_user = $conn->prepare("INSERT INTO `users`(id, name, email, password, image, strand, class_section, class_id) VALUES(?,?,?,?,?,?,?,?)");
+        $insert_user->execute([$id, $name, $email, $cpass, $rename, $strand, $class, $class_id]);
          move_uploaded_file($image_tmp_name, $image_folder);
 
          // ✅ Redirect to login page instead of auto-login
@@ -70,6 +112,7 @@ if (isset($_POST['submit_signup'])) {
    }
 }
 ?>
+
 
 
 <!DOCTYPE html>
@@ -148,9 +191,10 @@ if (isset($_POST['submit_signup'])) {
         ?>
     </select>
 
-            <!-- <select name="class" id="class" required>
+
+            <select name="class" id="class" required>
                 <option value="">Select Your Class</option>
-            </select> -->
+            </select>
             <input type="password" name="pass" placeholder="Enter your Password" maxlength="20" required autocomplete="off">
             <input type="password" name="cpass" placeholder="Confirm your Password" maxlength="20" required autocomplete="off">
             <span class="profile_pic">Please select your photo <span>*</span></span>
@@ -225,26 +269,31 @@ if (isset($_POST['submit_signup'])) {
     // });
 
     const strandSelect = document.getElementById('strand');
-   const classSelect = document.getElementById('class');
+    const classSelect = document.getElementById('class');
 
-   strandSelect.addEventListener('change', function() {
-      const selectedStrand = this.value;
+    strandSelect.addEventListener('change', function() {
+        const selectedStrand = this.value;
 
-      classSelect.innerHTML = '<option value="">Select Your Class</option>';
-      if (selectedStrand) {
-         fetch(`fetch_classes.php?strand=${selectedStrand}`)
-            .then(response => response.json())
-            .then(data => {
-               data.forEach(classItem => {
-                  const option = document.createElement('option');
-                  option.value = classItem.id;
-                  option.textContent = classItem.class_name;
-                  classSelect.appendChild(option);
-               });
-            })
-            .catch(error => console.error('Error fetching classes:', error));
-      }
-   });
+        // Clear the previous class options
+        classSelect.innerHTML = '<option value="">Select Your Class</option>';
+
+        if (selectedStrand) {
+            // Fetch the classes based on the selected strand
+            fetch(`fetch_classes.php?strand=${selectedStrand}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate the class dropdown with the available classes
+                    data.forEach(classItem => {
+                        const option = document.createElement('option');
+                        option.value = classItem.class_name;
+                        option.textContent = classItem.class_name;
+                        classSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching classes:', error));
+        }
+    });
+
 
 </script>
 
@@ -252,4 +301,5 @@ if (isset($_POST['submit_signup'])) {
     &copy; <?= date('Y'); ?> by Palawan Technological College Inc. | All rights reserved!
 </footer>
 </body>
+<
 </html>

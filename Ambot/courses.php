@@ -6,21 +6,18 @@ include 'components/connect.php';
 if(isset($_COOKIE['user_id'])){
    $user_id = $_COOKIE['user_id'];
 
-   // Fetch the user's strand and class from the database
-   $select_user = $conn->prepare("SELECT strand, class_id FROM users WHERE id = ?");
+   // Fetch the user's class_id from the database
+   $select_user = $conn->prepare("SELECT class_id FROM users WHERE id = ?");
    $select_user->execute([$user_id]);
    $fetch_user = $select_user->fetch(PDO::FETCH_ASSOC);
 
    if($fetch_user){
-      $user_strand = $fetch_user['strand'];
       $user_class_id = $fetch_user['class_id'];
    } else {
-      $user_strand = '';
       $user_class_id = '';
    }
 } else {
    $user_id = '';
-   $user_strand = '';
    $user_class_id = '';
 }
 
@@ -44,10 +41,10 @@ if (!empty($user_class_id)) {
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Courses</title>
 
-   <!-- font awesome cdn link  -->
+   <!-- Font Awesome CDN link -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
 
-   <!-- custom css file link  -->
+   <!-- Custom CSS file links -->
    <link rel="stylesheet" href="css/Subject_student.css">
    <link rel="stylesheet" href="css/style.css">
 
@@ -56,15 +53,20 @@ if (!empty($user_class_id)) {
 
 <?php include 'components/user_header.php'; ?>
 
-<!-- courses section starts  -->
-
+<!-- Courses Section -->
 <section class="courses1">
 
    <div class="box-container1">
 
       <?php
-      $select_courses = $conn->prepare("SELECT * FROM `playlist` WHERE status = ? AND strand = ? AND class_id = ? ORDER BY date DESC");
-      $select_courses->execute(['active', $user_strand, $user_class_id]);
+      // Query to fetch courses based only on class_id, ignoring strand
+      $select_courses = $conn->prepare("
+          SELECT * FROM `playlist` 
+          WHERE status = ? 
+          AND class_id = ? 
+          ORDER BY date DESC
+      ");
+      $select_courses->execute(['active', $user_class_id]);
 
       if($select_courses->rowCount() > 0){
          while($fetch_course = $select_courses->fetch(PDO::FETCH_ASSOC)){
@@ -102,12 +104,11 @@ if (!empty($user_class_id)) {
    </div>
 
 </section>
-
-<!-- courses section ends -->
+<!-- Courses Section Ends -->
 
 <?php include 'components/footer.php'; ?>
 
-<!-- custom js file link  -->
+<!-- Custom JS file link -->
 <script src="js/script.js"></script>
 
 </body>

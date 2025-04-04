@@ -4,22 +4,28 @@ include '../components/connect.php';
 
 if(isset($_COOKIE['tutor_id'])){
    $tutor_id = $_COOKIE['tutor_id'];
-}else{
+} else {
    $tutor_id = '';
    header('location:login.php');
+   exit();
 }
 
-if(isset($_GET['strand']) && isset($_GET['class_id'])){
+if(isset($_GET['strand']) && isset($_GET['class_id']) && isset($_GET['class_name'])){
    $strand = $_GET['strand'];
    $class_id = $_GET['class_id'];
+   $class_name = $_GET['class_name'];
 } else {
    header('location:classes.php?strand=' . $strand);
+   exit();
 }
 
-$class_query = $conn->prepare("SELECT class_name FROM `classes` WHERE id = ? AND tutor_id = ?");
-$class_query->execute([$class_id, $tutor_id]);
-$class_data = $class_query->fetch(PDO::FETCH_ASSOC);
-$class_name = $class_data['class_name'] ?? 'Unknown Class';
+// Fetch the class name if not passed in URL
+if (!isset($class_name)) {
+   $class_query = $conn->prepare("SELECT class_name FROM `classes` WHERE id = ? AND tutor_id = ?");
+   $class_query->execute([$class_id, $tutor_id]);
+   $class_data = $class_query->fetch(PDO::FETCH_ASSOC);
+   $class_name = $class_data['class_name'] ?? 'Unknown Class';
+}
 
 ?>
 
@@ -66,7 +72,7 @@ $class_name = $class_data['class_name'] ?? 'Unknown Class';
    <div class="box-container">
       <div class="box" style="text-align: center;">
          <h3 class="title">Create New Subject</h3>
-         <a href="add_playlist.php?strand=<?= htmlspecialchars($strand); ?>&class_id=<?= htmlspecialchars($class_id); ?>" class="btn">Add Subjects</a>
+         <a href="add_playlist.php?strand=<?= htmlspecialchars($strand); ?>&class_id=<?= htmlspecialchars($class_id); ?>&class_name=<?= urlencode($class_name); ?>" class="btn">Add Subjects</a>
       </div>
 
       <?php
@@ -84,10 +90,10 @@ $class_name = $class_data['class_name'] ?? 'Unknown Class';
       <div class="box">
          <h3 class="title"><?= htmlspecialchars($fetch_playlist['title']); ?></h3>
          <p class="description"><?= htmlspecialchars($fetch_playlist['description']); ?></p>
-         <a href="view_playlist.php?get_id=<?= $playlist_id; ?>" class="btn">View Lessons</a>
+         <a href="view_playlist.php?get_id=<?= $playlist_id; ?>&class_id=<?= $class_id; ?>&class_name=<?= urlencode($class_name); ?>" class="btn">View Lessons</a>
          <form action="" method="post" class="flex-btn">
             <input type="hidden" name="playlist_id" value="<?= $playlist_id; ?>">
-            <a href="update_playlist.php?get_id=<?= $playlist_id; ?>" class="option-btn">Update</a>
+            <a href="update_playlist.php?get_id=<?= $playlist_id; ?>&class_id=<?= $class_id; ?>&class_name=<?= urlencode($class_name); ?>" class="option-btn">Update</a>
             <input type="submit" value="Delete" class="delete-btn" onclick="return confirm('Delete this playlist?');" name="delete">
          </form>
       </div>

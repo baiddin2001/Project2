@@ -12,11 +12,16 @@ if (isset($_COOKIE['tutor_id'])) {
 if (isset($_GET['strand']) && isset($_GET['class_id'])) {
     $strand = $_GET['strand'];
     $class_id = $_GET['class_id']; 
+
+    // Fetch the class name from the database using the class_id
+    $class_query = $conn->prepare("SELECT class_name FROM `classes` WHERE id = ?");
+    $class_query->execute([$class_id]);
+    $class_data = $class_query->fetch(PDO::FETCH_ASSOC);
+    $class_name = $class_data['class_name'] ?? 'Unknown Class';  // Default to 'Unknown Class' if not found
 } else {
     header('location:classes.php?strand=' . $strand); 
     exit();
 }
-
 
 if (isset($_POST['submit'])) {
     $id = unique_id();
@@ -34,12 +39,14 @@ if (isset($_POST['submit'])) {
     $image_tmp_name = $_FILES['image']['tmp_name'];
     $image_folder = '../uploaded_files/' . $rename;
 
-    $add_playlist = $conn->prepare("INSERT INTO `playlist` (id, tutor_id, title, description, thumb, status, strand, class_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $add_playlist->execute([$id, $tutor_id, $title, $description, $rename, $status, $strand, $class_id]);
+    // Insert new playlist into the database with class_name, class_id, and strand
+    $add_playlist = $conn->prepare("INSERT INTO `playlist` (id, tutor_id, title, description, thumb, status, strand, class_id, class) 
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $add_playlist->execute([$id, $tutor_id, $title, $description, $rename, $status, $strand, $class_id, $class_name]);
 
     move_uploaded_file($image_tmp_name, $image_folder);
 
-    $message[] = 'New subject added for ' . htmlspecialchars($strand) . ' in class ' . htmlspecialchars($class_id) . '!';
+    $message[] = 'New subject added for ' . htmlspecialchars($strand) . ' in class ' . htmlspecialchars($class_name) . '!';
 }
 
 ?>
